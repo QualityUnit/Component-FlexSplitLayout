@@ -1,0 +1,1 @@
+import{p as e,b as r}from"./p-5c4ec850.js";(()=>{const r=import.meta.url,t={};return""!==r&&(t.resourcesUrl=new URL(".",r).href),e(t)})().then((e=>r([["p-8e229dd2",[[2,"flex-resizer",{depth:[2],overrideIframe:[4,"override-iframe"],name:[1],save:[4],disabled:[4]},[[1,"mousedown","resizeStart"],[1,"touchstart","resizeStart"]]]]]],e)));
