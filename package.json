@@ -12,7 +12,7 @@
   "unpkg": "dist/flex-resizer/flex-resizer.esm.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ionic-team/stencil-component-starter.git"
+    "url": "https://github.com/QualityUnit/Component-FlexSplitLayout.git"
   },
   "files": [
     "dist/",
