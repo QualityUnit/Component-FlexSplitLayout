@@ -34,3 +34,11 @@ jobs:
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - run: |
+          mkdir site
+          cp src/index.html site
+          cp -r dist site
+      - name: Deploy demo 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: site

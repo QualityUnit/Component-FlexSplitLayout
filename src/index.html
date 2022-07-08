@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Stencil Component Starter</title>
 
-    <script type="module" src="/dist/flex-resizer/flex-resizer.esm.js"></script>
+    <script src="dist/flex-resizer/flex-resizer.esm.js" type="module"></script>
   </head>
   <body>
     <div style=" display: flex;
@@ -14,7 +14,7 @@
             width: 800px;
 ">
     <div style="flex-shrink: 1; flex-basis: 20%; flex-grow: 0.5;">This is the first child<br>1<br>2<br>3<br>4</div>
-    <flex-resizer></flex-resizer>
+      <flex-resizer style="height: 5px; background-color: aqua"></flex-resizer>
     <div style="flex-shrink: 1; flex-basis: 200px; flex-grow: 0.5;">This is the next child<br>1<br>2<br>3<br>4</div>
     </div>
   </body>
