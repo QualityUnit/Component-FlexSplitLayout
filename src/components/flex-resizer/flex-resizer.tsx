@@ -130,6 +130,7 @@ export class FlexResizer {
   }
 
   resize(event: MouseEvent) {
+    event.preventDefault();
     let pos = this.getPosition(this.handleResizeEvent(event));
     let delta = (pos - this.resizeCurrentPos) * this.direction;
     this.psize += delta;
