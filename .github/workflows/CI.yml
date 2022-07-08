@@ -1,7 +1,12 @@
 name: CI
 
 on:
-  push
+  push:
+    branches:
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
+      - '!main'     # excludes master - it triggers release and tests are run before release build
 jobs:
   test:
     runs-on: ubuntu-latest
