@@ -1,4 +1,4 @@
-import { r as registerInstance, h, g as getElement } from './index-0a9efe57.js';
+import { r as registerInstance, h, g as getElement } from './index-4c3857bf.js';
 
 const flexResizerCss = ".sc-flex-resizer-h{display:block}";
 
