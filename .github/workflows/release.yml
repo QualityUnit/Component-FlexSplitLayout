@@ -26,14 +26,16 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+          token: ${{secrets.NPM}}
+          registry-url: 'https://registry.npmjs.org'
       - run: npm install
       - run: git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com" && git config --global user.name "$GITHUB_ACTOR"
       - run: npm version patch
       - run: git push --tags && git push
       - run: npm run build
-      - run: npm publish
+      - run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM }}
       - run: |
           mkdir site
           cp src/index.html site
