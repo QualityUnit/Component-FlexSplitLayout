@@ -12,7 +12,7 @@
   "unpkg": "dist/flex-resizer/flex-resizer.esm.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/QualityUnit/Component-FlexSplitLayout.git"
+    "url": "git+https://github.com/QualityUnit/Component-FlexSplitLayout.git"
   },
   "files": [
     "dist/",
@@ -34,5 +34,15 @@
     "jest-cli": "^27.4.5",
     "puppeteer": "^15.3.2"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/QualityUnit/Component-FlexSplitLayout/issues"
+  },
+  "homepage": "https://github.com/QualityUnit/Component-FlexSplitLayout#readme",
+  "keywords": [
+    "split",
+    "layout",
+    "flexbox"
+  ],
+  "author": "QualityUnit"
 }
