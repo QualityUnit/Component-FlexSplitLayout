@@ -31,5 +31,6 @@ export declare class FlexResizer {
   handleResizeEvent(event: TouchEvent | MouseEvent): Touch | MouseEvent;
   normalizeDepth(): HTMLElement;
   connectedCallback(): void;
+  watchName(name: string): void;
   watchDisabled(disabled: boolean): void;
 }

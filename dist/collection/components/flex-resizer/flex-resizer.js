@@ -161,6 +161,10 @@ export class FlexResizer {
     this.a.style["flex-grow"] = savedA;
     this.b.style["flex-grow"] = localStorage.getItem(this.localStorageKey + "b");
   }
+  watchName(name) {
+    this.localStorageKey = "flex-resizer-" + name;
+    this.connectedCallback();
+  }
   watchDisabled(disabled) {
     let element = this.normalizeDepth();
     if (!disabled) {
@@ -270,6 +274,9 @@ export class FlexResizer {
   }; }
   static get elementRef() { return "el"; }
   static get watchers() { return [{
+      "propName": "name",
+      "methodName": "watchName"
+    }, {
       "propName": "disabled",
       "methodName": "watchDisabled"
     }]; }

@@ -166,6 +166,10 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class extends HTMLElement
     this.a.style["flex-grow"] = savedA;
     this.b.style["flex-grow"] = localStorage.getItem(this.localStorageKey + "b");
   }
+  watchName(name) {
+    this.localStorageKey = "flex-resizer-" + name;
+    this.connectedCallback();
+  }
   watchDisabled(disabled) {
     let element = this.normalizeDepth();
     if (!disabled) {
@@ -175,6 +179,7 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class extends HTMLElement
   }
   get el() { return this; }
   static get watchers() { return {
+    "name": ["watchName"],
     "disabled": ["watchDisabled"]
   }; }
   static get style() { return flexResizerCss; }
