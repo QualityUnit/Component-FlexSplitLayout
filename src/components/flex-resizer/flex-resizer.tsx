@@ -201,6 +201,12 @@ export class FlexResizer {
     this.b.style["flex-grow"] = localStorage.getItem(this.localStorageKey + "b");
   }
 
+  @Watch("name")
+  watchName(name: string) {
+    this.localStorageKey = "flex-resizer-" + name
+    this.connectedCallback();
+  }
+
   @Watch("disabled")
   watchDisabled(disabled: boolean) {
     let element = this.normalizeDepth();
