@@ -34,8 +34,5 @@
     "jest-cli": "^27.4.5",
     "puppeteer": "^15.3.2"
   },
-  "license": "MIT",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  }
+  "license": "MIT"
 }
