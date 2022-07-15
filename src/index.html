@@ -6,16 +6,48 @@
     <title>Stencil Component Starter</title>
 
     <script src="dist/flex-resizer/flex-resizer.esm.js" type="module"></script>
+    <style type="text/css">
+      .message, .actionbox {
+        display: flex;
+        flex-direction: column;
+        font-family: Courier, Arial;
+        font-size: 14px;
+
+      }
+      .message > div,
+      .actionbox > div {
+        height: 100px;
+        background-color: #ddd;
+        text-align: center;
+        flex: 1;
+        padding: 5px;
+        border: 1px solid #a1b2c3;
+      }
+      .message div:nth-child(2n+1),
+      .actionbox div:nth-child(2n+1) {
+        background-color: #eee;
+        border-width: 0 4px;
+      }
+      div div:first-child {flex: 2;}
+    </style>
   </head>
   <body>
-    <div style=" display: flex;
-            flex-direction: column;
-            height: 505px;
-            width: 800px;
-">
-    <div style="flex-shrink: 1; flex-basis: 20%; flex-grow: 0.5;">This is the first child<br>1<br>2<br>3<br>4</div>
-      <flex-resizer style="height: 5px; background-color: aqua"></flex-resizer>
-    <div style="flex-shrink: 1; flex-basis: 200px; flex-grow: 0.5;">This is the next child<br>1<br>2<br>3<br>4</div>
+    <div style="display: flex;flex-direction: column;height: 505px;width: 800px;margin: 0 auto;">
+      <div class="message" style="flex-shrink: 1; flex-basis: 20%; flex-grow: 0.5;">
+        <div>This is the first child</div>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+      </div>
+      <flex-resizer style="height: 5px; background-color: #20d15f; cursor: n-resize"></flex-resizer>
+      <div class="actionbox" style="flex-shrink: 1; flex-basis: 200px; flex-grow: 0.5;">
+        <div>This is the next child</div>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+      </div>
     </div>
   </body>
 </html>
