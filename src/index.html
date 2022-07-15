@@ -27,24 +27,49 @@
         background-color: #eee;
         border-width: 0 4px;
       }
-      div div:first-child {flex: 2;}
+      .message > div:first-child,
+      .actionbox > div:first-child {flex: 2;}
+      .h-flex {
+        display: flex;
+      }
+      .h-flex div { flex: 1; padding: 5px; min-height: 50px;}
+      .h-flex > div:nth-child(2n+1) {background-color: #bbb;}
+      .h-flex .h-flex {background-color: lightcoral;}
+      .c3 {min-width: 100px;}
     </style>
   </head>
   <body>
-    <div style="display: flex;flex-direction: column;height: 505px;width: 800px;margin: 0 auto;">
+    <div style="display: flex;flex-direction: column;height: 505px;width: 800px;margin: 0 auto;overflow: hidden;border: 1px solid #ddd; border-radius: 10px;">
       <div class="message" style="flex-shrink: 1; flex-basis: 20%; flex-grow: 0.5;">
         <div>This is the first child</div>
-        <div>1</div>
+        <div class="h-flex">
+          <div style="flex-shrink: 1; display: flex;">
+            <div>1a</div>
+          </div>
+          <flex-resizer style="width: 0; border-left: 4px double red;height: 100%; margin: 0 2px; cursor: ew-resize;"></flex-resizer>
+          <div style="flex-shrink:1; display: flex;">
+            <div>1b</div>
+            <div>1c</div>
+          </div>
+        </div>
         <div>2</div>
         <div>3</div>
         <div>4</div>
       </div>
-      <flex-resizer style="height: 5px; background-color: #20d15f; cursor: n-resize"></flex-resizer>
+      <flex-resizer style="height: 0;border-bottom: 4px double red; cursor: n-resize"></flex-resizer>
       <div class="actionbox" style="flex-shrink: 1; flex-basis: 200px; flex-grow: 0.5;">
         <div>This is the next child</div>
         <div>1</div>
         <div>2</div>
-        <div>3</div>
+        <div class="h-flex">
+          <div style="flex: 0 0 20%">3a</div>
+          <div class="h-flex">
+            <div>3b.a</div>
+            <div>3b.b</div>
+          </div>
+          <flex-resizer style="width: 0; height: 100%; border-left: 4px double red; margin: 0 2px; overflow: hidden; cursor: ew-resize;"></flex-resizer>
+          <div class="c3">3c</div>
+        </div>
         <div>4</div>
       </div>
     </div>
