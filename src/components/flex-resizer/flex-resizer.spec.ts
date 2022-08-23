@@ -7,7 +7,7 @@ describe('my-component', () => {
       components: [FlexResizer],
       html: '<flex-resizer></flex-resizer>',
     });
-    expect(root).toEqualHtml(`<flex-resizer>
+    expect(root).toEqualHtml(`<flex-resizer class="row-resizer">
     <div></div>
 </flex-resizer>`);
   });
