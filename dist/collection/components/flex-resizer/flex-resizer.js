@@ -148,6 +148,12 @@ export class FlexResizer {
   }
   connectedCallback() {
     let element = this.normalizeDepth();
+    if (getComputedStyle(element.parentElement)["flex-direction"] == "column" || getComputedStyle(element.parentElement)["flex-direction"] == "column-reverse") {
+      this.el.classList.add("column-resizer");
+    }
+    else {
+      this.el.classList.add("row-resizer");
+    }
     if (this.disabled) {
       element.style.display = "none";
       return;
