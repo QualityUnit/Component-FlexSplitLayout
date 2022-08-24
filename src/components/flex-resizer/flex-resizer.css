@@ -1,3 +1,16 @@
 :host {
   display: block;
 }
+
+div {
+  height: 100%;
+  width: 100%;
+}
+
+.column-resizer {
+  cursor: row-resize;
+}
+
+.row-resizer {
+  cursor: col-resize;
+}
