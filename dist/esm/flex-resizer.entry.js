@@ -1,6 +1,6 @@
 import { r as registerInstance, h, g as getElement } from './index-4c3857bf.js';
 
-const flexResizerCss = ".sc-flex-resizer-h{display:block}";
+const flexResizerCss = ".sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}";
 
 const FlexResizer = class {
   constructor(hostRef) {
@@ -54,9 +54,7 @@ const FlexResizer = class {
     this.resizeCurrentPos = this.startPos;
     this.nsize = this.computeSize(this.b);
     this.totalHeight = this.psize + this.nsize;
-    const html = document.querySelector('html');
-    html.style.cursor = 'row-resize';
-    this.el.style.cursor = 'row-resize';
+    document.body.style.cursor = this.cursor;
     this.resizing = true;
     event.preventDefault();
     if (this.overrideIframe) {
@@ -91,9 +89,7 @@ const FlexResizer = class {
     window.removeEventListener("touchmove", this.resize);
     window.removeEventListener("touchend", this.resizeEnd);
     this.resizing = false;
-    const html = document.querySelector('html');
-    html.style.cursor = 'default';
-    this.el.style.cursor = 'ns-resize';
+    document.body.style.cursor = 'default';
     if (this.overrideIframe) {
       for (let iframe of document.getElementsByTagName("iframe")) {
         iframe.style.pointerEvents = "auto";
@@ -151,12 +147,14 @@ const FlexResizer = class {
     return element;
   }
   connectedCallback() {
-    let element = this.normalizeDepth();
+    const element = this.normalizeDepth();
     if (getComputedStyle(element.parentElement)["flex-direction"] == "column" || getComputedStyle(element.parentElement)["flex-direction"] == "column-reverse") {
       this.el.classList.add("column-resizer");
+      this.cursor = "row-resize";
     }
     else {
       this.el.classList.add("row-resizer");
+      this.cursor = "col-resize";
     }
     if (this.disabled) {
       element.style.display = "none";

@@ -19,6 +19,7 @@ export declare class FlexResizer {
   private getElementSize;
   private getPosition;
   private direction;
+  private cursor;
   constructor();
   render(): any;
   resizeStart(event: MouseEvent | TouchEvent): void;
