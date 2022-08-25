@@ -28,6 +28,7 @@ export class FlexResizer {
   private getElementSize: (arg: HTMLElement) => number;
   private getPosition: (arg: MouseEvent | Touch) => number;
   private direction: number = 1;
+  private cursor: string;
 
   constructor() {
     this.resizeStart = this.resizeStart.bind(this);
@@ -40,7 +41,7 @@ export class FlexResizer {
     return <div></div>;
   }
 
-  @Listen('mousedown')
+  @Listen('mousedown', {passive: false})
   @Listen('touchstart')
   resizeStart(event: MouseEvent | TouchEvent) {
     let element = this.normalizeDepth();
@@ -75,9 +76,7 @@ export class FlexResizer {
     this.resizeCurrentPos = this.startPos;
     this.nsize = this.computeSize(this.b);
     this.totalHeight = this.psize + this.nsize;
-    const html = document.querySelector('html');
-    html.style.cursor = 'row-resize';
-    this.el.style.cursor = 'row-resize';
+    document.body.style.cursor = this.cursor
 
     this.resizing = true;
     event.preventDefault();
@@ -119,9 +118,7 @@ export class FlexResizer {
     window.removeEventListener("touchend", this.resizeEnd);
 
     this.resizing = false;
-    const html = document.querySelector('html');
-    html.style.cursor = 'default';
-    this.el.style.cursor = 'ns-resize';
+    document.body.style.cursor = 'default';
     if (this.overrideIframe) {
       for (let iframe of document.getElementsByTagName("iframe")) {
         iframe.style.pointerEvents = "auto";
@@ -186,11 +183,13 @@ export class FlexResizer {
   }
 
   connectedCallback() {
-    let element = this.normalizeDepth();
+    const element = this.normalizeDepth();
     if (getComputedStyle(element.parentElement)["flex-direction"] == "column" || getComputedStyle(element.parentElement)["flex-direction"] == "column-reverse") {
       this.el.classList.add("column-resizer")
+      this.cursor = "row-resize";
     } else {
       this.el.classList.add("row-resizer")
+      this.cursor = "col-resize";
     }
     if (this.disabled) {
       element.style.display = "none";
