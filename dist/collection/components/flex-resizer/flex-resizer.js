@@ -1,14 +1,14 @@
-import { Component, Element, h, Listen, Prop, Watch } from '@stencil/core';
+import { h } from '@stencil/core';
 export class FlexResizer {
   constructor() {
+    this.resizing = false;
+    this.direction = 1;
+    this.localStorageKey = "flex-resizer-" + this.name;
     this.depth = 0;
     this.overrideIframe = true;
     this.name = "";
     this.save = true;
     this.disabled = false;
-    this.resizing = false;
-    this.direction = 1;
-    this.localStorageKey = "flex-resizer-" + this.name;
     this.resizeStart = this.resizeStart.bind(this);
     this.resize = this.resize.bind(this);
     this.resizeEnd = this.resizeEnd.bind(this);
@@ -171,130 +171,144 @@ export class FlexResizer {
   }
   watchDisabled(disabled) {
     let element = this.normalizeDepth();
-    if (!disabled) {
+    if (disabled) {
+      this.a.style["flex-grow"] = null;
+      this.b.style["flex-grow"] = null;
+    }
+    else {
       this.connectedCallback();
     }
     element.style.display = disabled ? "none" : "block";
   }
   static get is() { return "flex-resizer"; }
   static get encapsulation() { return "scoped"; }
-  static get originalStyleUrls() { return {
-    "$": ["flex-resizer.css"]
-  }; }
-  static get styleUrls() { return {
-    "$": ["flex-resizer.css"]
-  }; }
-  static get properties() { return {
-    "depth": {
-      "type": "number",
-      "mutable": false,
-      "complexType": {
-        "original": "number",
-        "resolved": "number",
-        "references": {}
+  static get originalStyleUrls() {
+    return {
+      "$": ["flex-resizer.css"]
+    };
+  }
+  static get styleUrls() {
+    return {
+      "$": ["flex-resizer.css"]
+    };
+  }
+  static get properties() {
+    return {
+      "depth": {
+        "type": "number",
+        "mutable": false,
+        "complexType": {
+          "original": "number",
+          "resolved": "number",
+          "references": {}
+        },
+        "required": false,
+        "optional": false,
+        "docs": {
+          "tags": [],
+          "text": ""
+        },
+        "attribute": "depth",
+        "reflect": false,
+        "defaultValue": "0"
       },
-      "required": false,
-      "optional": false,
-      "docs": {
-        "tags": [],
-        "text": ""
+      "overrideIframe": {
+        "type": "boolean",
+        "mutable": false,
+        "complexType": {
+          "original": "boolean",
+          "resolved": "boolean",
+          "references": {}
+        },
+        "required": false,
+        "optional": false,
+        "docs": {
+          "tags": [],
+          "text": ""
+        },
+        "attribute": "override-iframe",
+        "reflect": false,
+        "defaultValue": "true"
       },
-      "attribute": "depth",
-      "reflect": false,
-      "defaultValue": "0"
-    },
-    "overrideIframe": {
-      "type": "boolean",
-      "mutable": false,
-      "complexType": {
-        "original": "boolean",
-        "resolved": "boolean",
-        "references": {}
+      "name": {
+        "type": "string",
+        "mutable": false,
+        "complexType": {
+          "original": "string",
+          "resolved": "string",
+          "references": {}
+        },
+        "required": false,
+        "optional": false,
+        "docs": {
+          "tags": [],
+          "text": ""
+        },
+        "attribute": "name",
+        "reflect": false,
+        "defaultValue": "\"\""
       },
-      "required": false,
-      "optional": false,
-      "docs": {
-        "tags": [],
-        "text": ""
+      "save": {
+        "type": "boolean",
+        "mutable": false,
+        "complexType": {
+          "original": "boolean",
+          "resolved": "boolean",
+          "references": {}
+        },
+        "required": false,
+        "optional": false,
+        "docs": {
+          "tags": [],
+          "text": ""
+        },
+        "attribute": "save",
+        "reflect": false,
+        "defaultValue": "true"
       },
-      "attribute": "override-iframe",
-      "reflect": false,
-      "defaultValue": "true"
-    },
-    "name": {
-      "type": "string",
-      "mutable": false,
-      "complexType": {
-        "original": "string",
-        "resolved": "string",
-        "references": {}
-      },
-      "required": false,
-      "optional": false,
-      "docs": {
-        "tags": [],
-        "text": ""
-      },
-      "attribute": "name",
-      "reflect": false,
-      "defaultValue": "\"\""
-    },
-    "save": {
-      "type": "boolean",
-      "mutable": false,
-      "complexType": {
-        "original": "boolean",
-        "resolved": "boolean",
-        "references": {}
-      },
-      "required": false,
-      "optional": false,
-      "docs": {
-        "tags": [],
-        "text": ""
-      },
-      "attribute": "save",
-      "reflect": false,
-      "defaultValue": "true"
-    },
-    "disabled": {
-      "type": "boolean",
-      "mutable": false,
-      "complexType": {
-        "original": "boolean",
-        "resolved": "boolean",
-        "references": {}
-      },
-      "required": false,
-      "optional": false,
-      "docs": {
-        "tags": [],
-        "text": ""
-      },
-      "attribute": "disabled",
-      "reflect": false,
-      "defaultValue": "false"
-    }
-  }; }
+      "disabled": {
+        "type": "boolean",
+        "mutable": false,
+        "complexType": {
+          "original": "boolean",
+          "resolved": "boolean",
+          "references": {}
+        },
+        "required": false,
+        "optional": false,
+        "docs": {
+          "tags": [],
+          "text": ""
+        },
+        "attribute": "disabled",
+        "reflect": false,
+        "defaultValue": "false"
+      }
+    };
+  }
   static get elementRef() { return "el"; }
-  static get watchers() { return [{
-      "propName": "name",
-      "methodName": "watchName"
-    }, {
-      "propName": "disabled",
-      "methodName": "watchDisabled"
-    }]; }
-  static get listeners() { return [{
-      "name": "mousedown",
-      "method": "resizeStart",
-      "target": undefined,
-      "capture": false,
-      "passive": false
-    }, {
-      "name": "touchstart",
-      "method": "resizeStart",
-      "target": undefined,
-      "capture": false,
-      "passive": true
-    }]; }
+  static get watchers() {
+    return [{
+        "propName": "name",
+        "methodName": "watchName"
+      }, {
+        "propName": "disabled",
+        "methodName": "watchDisabled"
+      }];
+  }
+  static get listeners() {
+    return [{
+        "name": "mousedown",
+        "method": "resizeStart",
+        "target": undefined,
+        "capture": false,
+        "passive": false
+      }, {
+        "name": "touchstart",
+        "method": "resizeStart",
+        "target": undefined,
+        "capture": false,
+        "passive": true
+      }];
+  }
 }

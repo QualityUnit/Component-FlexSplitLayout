@@ -2,21 +2,21 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const index = require('./index-cc5e59d6.js');
+const index = require('./index-beec0254.js');
 
 const flexResizerCss = ".sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}";
 
 const FlexResizer = class {
   constructor(hostRef) {
     index.registerInstance(this, hostRef);
+    this.resizing = false;
+    this.direction = 1;
+    this.localStorageKey = "flex-resizer-" + this.name;
     this.depth = 0;
     this.overrideIframe = true;
     this.name = "";
     this.save = true;
     this.disabled = false;
-    this.resizing = false;
-    this.direction = 1;
-    this.localStorageKey = "flex-resizer-" + this.name;
     this.resizeStart = this.resizeStart.bind(this);
     this.resize = this.resize.bind(this);
     this.resizeEnd = this.resizeEnd.bind(this);
@@ -179,7 +179,11 @@ const FlexResizer = class {
   }
   watchDisabled(disabled) {
     let element = this.normalizeDepth();
-    if (!disabled) {
+    if (disabled) {
+      this.a.style["flex-grow"] = null;
+      this.b.style["flex-grow"] = null;
+    }
+    else {
       this.connectedCallback();
     }
     element.style.display = disabled ? "none" : "block";

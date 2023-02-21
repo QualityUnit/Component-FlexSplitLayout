@@ -133,7 +133,7 @@ export interface ListenOptions {
      */
     passive?: boolean;
 }
-export declare type ListenTargetOptions = 'body' | 'document' | 'window';
+export type ListenTargetOptions = 'body' | 'document' | 'window';
 export interface StateDecorator {
     (): PropertyDecorator;
 }
@@ -214,14 +214,16 @@ export declare const State: StateDecorator;
  * https://stenciljs.com/docs/reactive-data#watch-decorator
  */
 export declare const Watch: WatchDecorator;
-export declare type ResolutionHandler = (elm: HTMLElement) => string | undefined | null;
-export declare type ErrorHandler = (err: any, element?: HTMLElement) => void;
+export type ResolutionHandler = (elm: HTMLElement) => string | undefined | null;
+export type ErrorHandler = (err: any, element?: HTMLElement) => void;
 /**
  * `setMode()` is used for libraries which provide multiple "modes" for styles.
  */
 export declare const setMode: (handler: ResolutionHandler) => void;
 /**
- * getMode
+ * `getMode()` is used for libraries which provide multiple "modes" for styles.
+ * @param ref a reference to the node to get styles for
+ * @returns the current mode or undefined, if not found
  */
 export declare function getMode<T = string | undefined>(ref: any): T;
 export declare function setPlatformHelpers(helpers: {
@@ -234,6 +236,9 @@ export declare function setPlatformHelpers(helpers: {
 /**
  * Get the base path to where the assets can be found. Use `setAssetPath(path)`
  * if the path needs to be customized.
+ * @param path the path to use in calculating the asset path. this value will be
+ * used in conjunction with the base asset path
+ * @returns the base path
  */
 export declare function getAssetPath(path: string): string;
 /**
@@ -246,22 +251,38 @@ export declare function getAssetPath(path: string): string;
  * `setAssetPath(document.currentScript.src)`, or using a bundler's replace plugin to
  * dynamically set the path at build time, such as `setAssetPath(process.env.ASSET_PATH)`.
  * But do note that this configuration depends on how your script is bundled, or lack of
- * bunding, and where your assets can be loaded from. Additionally custom bundling
+ * bundling, and where your assets can be loaded from. Additionally custom bundling
  * will have to ensure the static assets are copied to its build directory.
+ * @param path the asset path to set
+ * @returns the set path
  */
 export declare function setAssetPath(path: string): string;
 /**
- * getElement
+ * Used to specify a nonce value that corresponds with an application's
+ * [Content Security Policy (CSP)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP).
+ * When set, the nonce will be added to all dynamically created script and style tags at runtime.
+ * Alternatively, the nonce value can be set on a `meta` tag in the DOM head
+ * (<meta name="csp-nonce" content="{ nonce value here }" />) and will result in the same behavior.
+ * @param nonce The value to be used for the nonce attribute.
+ */
+export declare function setNonce(nonce: string): void;
+/**
+ * Retrieve a Stencil element for a given reference
+ * @param ref the ref to get the Stencil element for
+ * @returns a reference to the element
  */
 export declare function getElement(ref: any): HTMLStencilElement;
 /**
  * Schedules a new render of the given instance or element even if no state changed.
  *
- * Notice `forceUpdate()` is not syncronous and might perform the DOM render in the next frame.
+ * Notice `forceUpdate()` is not synchronous and might perform the DOM render in the next frame.
+ *
+ * @param ref the node/element to force the re-render of
  */
 export declare function forceUpdate(ref: any): void;
 /**
  * getRenderingRef
+ * @returns the rendering ref
  */
 export declare function getRenderingRef(): any;
 export interface HTMLStencilElement extends HTMLElement {
@@ -272,6 +293,8 @@ export interface HTMLStencilElement extends HTMLElement {
  * in the best moment to perform DOM mutation without causing layout thrashing.
  *
  * For further information: https://developers.google.com/web/fundamentals/performance/rendering/avoid-large-complex-layouts-and-layout-thrashing
+ *
+ * @param task the DOM-write to schedule
  */
 export declare function writeTask(task: RafCallback): void;
 /**
@@ -279,6 +302,8 @@ export declare function writeTask(task: RafCallback): void;
  * in the best moment to perform DOM reads without causing layout thrashing.
  *
  * For further information: https://developers.google.com/web/fundamentals/performance/rendering/avoid-large-complex-layouts-and-layout-thrashing
+ *
+ * @param task the DOM-read to schedule
  */
 export declare function readTask(task: RafCallback): void;
 /**
@@ -417,13 +442,57 @@ interface HostAttributes {
     ref?: (el: HTMLElement | null) => void;
     [prop: string]: any;
 }
+/**
+ * Utilities for working with functional Stencil components. An object
+ * conforming to this interface is passed by the Stencil runtime as the third
+ * argument to a functional component, allowing component authors to work with
+ * features like children.
+ *
+ * The children of a functional component will be passed as the second
+ * argument, so a functional component which uses these utils to transform its
+ * children might look like the following:
+ *
+ * ```ts
+ * export const AddClass: FunctionalComponent = (_, children, utils) => (
+ *  utils.map(children, child => ({
+ *    ...child,
+ *    vattrs: {
+ *      ...child.vattrs,
+ *      class: `${child.vattrs.class} add-class`
+ *    }
+ *  }))
+ * );
+ * ```
+ *
+ * For more see the Stencil documentation, here:
+ * https://stenciljs.com/docs/functional-components
+ */
 export interface FunctionalUtilities {
+    /**
+     * Utility for reading the children of a functional component at runtime.
+     * Since the Stencil runtime uses a different interface for children it is
+     * not recommendeded to read the children directly, and is preferable to use
+     * this utility to, for instance, perform a side effect for each child.
+     */
     forEach: (children: VNode[], cb: (vnode: ChildNode, index: number, array: ChildNode[]) => void) => void;
+    /**
+     * Utility for transforming the children of a functional component. Given an
+     * array of children and a callback this will return a list of the results of
+     * passing each child to the supplied callback.
+     */
     map: (children: VNode[], cb: (vnode: ChildNode, index: number, array: ChildNode[]) => ChildNode) => VNode[];
 }
 export interface FunctionalComponent<T = {}> {
     (props: T, children: VNode[], utils: FunctionalUtilities): VNode | VNode[];
 }
+/**
+ * A Child VDOM node
+ *
+ * This has most of the same properties as {@link VNode} but friendlier names
+ * (i.e. `vtag` instead of `$tag$`, `vchildren` instead of `$children$`) in
+ * order to provide a friendlier public interface for users of the
+ * {@link FunctionalUtilities}).
+ */
 export interface ChildNode {
     vtag?: string | number | Function;
     vkey?: string | number;
@@ -470,6 +539,9 @@ export declare function h(sel: any, children: Array<VNode | undefined | null>): 
 export declare function h(sel: any, data: VNodeData | null, text: string): VNode;
 export declare function h(sel: any, data: VNodeData | null, children: Array<VNode | undefined | null>): VNode;
 export declare function h(sel: any, data: VNodeData | null, children: VNode): VNode;
+/**
+ * A virtual DOM node
+ */
 export interface VNode {
     $flags$: number;
     $tag$: string | number | Function;

@@ -6,14 +6,14 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class extends HTMLElement
   constructor() {
     super();
     this.__registerHost();
+    this.resizing = false;
+    this.direction = 1;
+    this.localStorageKey = "flex-resizer-" + this.name;
     this.depth = 0;
     this.overrideIframe = true;
     this.name = "";
     this.save = true;
     this.disabled = false;
-    this.resizing = false;
-    this.direction = 1;
-    this.localStorageKey = "flex-resizer-" + this.name;
     this.resizeStart = this.resizeStart.bind(this);
     this.resize = this.resize.bind(this);
     this.resizeEnd = this.resizeEnd.bind(this);
@@ -176,7 +176,11 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class extends HTMLElement
   }
   watchDisabled(disabled) {
     let element = this.normalizeDepth();
-    if (!disabled) {
+    if (disabled) {
+      this.a.style["flex-grow"] = null;
+      this.b.style["flex-grow"] = null;
+    }
+    else {
       this.connectedCallback();
     }
     element.style.display = disabled ? "none" : "block";
