@@ -214,7 +214,10 @@ export class FlexResizer {
   @Watch("disabled")
   watchDisabled(disabled: boolean) {
     let element = this.normalizeDepth();
-    if (!disabled) {
+    if (disabled) {
+      this.a.style["flex-grow"] = null;
+      this.b.style["flex-grow"] = null;
+    } else {
       this.connectedCallback();
     }
     element.style.display = disabled ? "none" : "block";
