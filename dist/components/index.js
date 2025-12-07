@@ -1,2 +1,4 @@
-export { setAssetPath, setNonce, setPlatformOptions } from '@stencil/core/internal/client';
-export { FlexResizer, defineCustomElement as defineCustomElementFlexResizer } from './flex-resizer.js';
+export { getAssetPath, render, setAssetPath, setNonce, setPlatformOptions } from '@stencil/core/internal/client';
+//# sourceMappingURL=index.js.map
+
+//# sourceMappingURL=index.js.map

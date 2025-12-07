@@ -1,11 +1,11 @@
 {
   "entries": [
-    "./components/flex-resizer/flex-resizer.js"
+    "components/flex-resizer/flex-resizer.js"
   ],
   "compiler": {
     "name": "@stencil/core",
-    "version": "2.22.2",
-    "typescriptVersion": "4.9.4"
+    "version": "4.38.3",
+    "typescriptVersion": "5.9.3"
   },
   "collections": [],
   "bundles": []

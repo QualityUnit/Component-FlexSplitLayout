@@ -1,8 +1,20 @@
-declare type CustomMethodDecorator<T> = (target: Object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T> | void;
+type CustomMethodDecorator<T> = (target: object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T> | void;
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+type MixinInstance<F> = F extends (base: MixedInCtor) => MixedInCtor<infer I> ? I : never;
 export interface ComponentDecorator {
     (opts?: ComponentOptions): ClassDecorator;
 }
 export interface ComponentOptions {
+    /**
+     * When set to `true` this component will be form-associated. See
+     * https://stenciljs.com/docs/next/form-associated documentation on how to
+     * build form-associated Stencil components that integrate into forms like
+     * native browser elements such as `<input>` and `<textarea>`.
+     *
+     * The {@link AttachInternals} decorator allows for access to the
+     * `ElementInternals` object to modify the associated form.
+     */
+    formAssociated?: boolean;
     /**
      * Tag name of the web component. Ideally, the tag name must be globally unique,
      * so it's recommended to choose an unique prefix for all your components within the same collection.
@@ -62,7 +74,7 @@ export interface PropOptions {
     /**
      * The name of the associated DOM attribute.
      * Stencil uses different heuristics to determine the default name of the attribute,
-     * but using this property, you can override the default behaviour.
+     * but using this property, you can override the default behavior.
      */
     attribute?: string | null;
     /**
@@ -107,6 +119,9 @@ export interface EventOptions {
      */
     composed?: boolean;
 }
+export interface AttachInternalsDecorator {
+    (): PropertyDecorator;
+}
 export interface ListenDecorator {
     (eventName: string, opts?: ListenOptions): CustomMethodDecorator<any>;
 }
@@ -128,7 +143,7 @@ export interface ListenOptions {
      * By default, Stencil uses several heuristics to determine if
      * it must attach a `passive` event listener or not.
      *
-     * Using the `passive` option can be used to change the default behaviour.
+     * Using the `passive` option can be used to change the default behavior.
      * Please see https://developers.google.com/web/updates/2016/06/passive-event-listeners for further information.
      */
     passive?: boolean;
@@ -138,7 +153,13 @@ export interface StateDecorator {
     (): PropertyDecorator;
 }
 export interface WatchDecorator {
-    (propName: string): CustomMethodDecorator<any>;
+    (propName: any): CustomMethodDecorator<(newValue?: any, oldValue?: any, propName?: any, ...args: any[]) => any | void>;
+}
+export interface PropSerializeDecorator {
+    (propName: any): CustomMethodDecorator<(newValue?: any, propName?: string, ...args: any[]) => string | null>;
+}
+export interface AttrDeserializeDecorator {
+    (propName: any): CustomMethodDecorator<(newValue?: any, propName?: string, ...args: any[]) => any>;
 }
 export interface UserBuildConditionals {
     isDev: boolean;
@@ -175,6 +196,12 @@ export declare const Element: ElementDecorator;
  * https://stenciljs.com/docs/events
  */
 export declare const Event: EventDecorator;
+/**
+ * If the `formAssociated` option is set in options passed to the
+ * `@Component()` decorator then this decorator may be used to get access to the
+ * `ElementInternals` instance associated with the component.
+ */
+export declare const AttachInternals: AttachInternalsDecorator;
 /**
  * The `Listen()` decorator is for listening DOM events, including the ones
  * dispatched from `@Events()`.
@@ -214,6 +241,14 @@ export declare const State: StateDecorator;
  * https://stenciljs.com/docs/reactive-data#watch-decorator
  */
 export declare const Watch: WatchDecorator;
+/**
+ * Decorator to serialize a property to an attribute string.
+ */
+export declare const PropSerialize: PropSerializeDecorator;
+/**
+ * Decorator to deserialize an attribute string to a property.
+ */
+export declare const AttrDeserialize: AttrDeserializeDecorator;
 export type ResolutionHandler = (elm: HTMLElement) => string | undefined | null;
 export type ErrorHandler = (err: any, element?: HTMLElement) => void;
 /**
@@ -241,6 +276,25 @@ export declare function setPlatformHelpers(helpers: {
  * @returns the base path
  */
 export declare function getAssetPath(path: string): string;
+/**
+ * Method to render a virtual DOM tree to a container element.
+ *
+ * @example
+ * ```tsx
+ * import { render } from '@stencil/core';
+ *
+ * const vnode = (
+ *   <div>
+ *     <h1>Hello, world!</h1>
+ *   </div>
+ * );
+ * render(vnode, document.body);
+ * ```
+ *
+ * @param vnode - The virtual DOM tree to render
+ * @param container - The container element to render the virtual DOM tree to
+ */
+export declare function render(vnode: VNode, container: Element): void;
 /**
  * Used to manually set the base path where assets can be found. For lazy-loaded
  * builds the asset path is automatically set and assets copied to the correct
@@ -311,6 +365,37 @@ export declare function readTask(task: RafCallback): void;
  * Unhandled exception raised while rendering, during event handling, or lifecycles will trigger the custom event handler.
  */
 export declare const setErrorHandler: (handler: ErrorHandler) => void;
+/**
+ * @deprecated - Use `MixedInCtor` instead:
+ * ```ts
+ * import { MixedInCtor } from '@stencil/core';
+ *
+ * const AFactoryFn = <B extends MixedInCtor>(Base: B) => {class A extends Base { propA = A }; return A;}
+ * ```
+ */
+export type MixinFactory = (base: MixedInCtor) => MixedInCtor;
+export type MixedInCtor<T = {}> = new (...args: any[]) => T;
+/**
+ * Compose multiple mixin classes into a single constructor.
+ * The resulting class has the combined instance types of all mixed-in classes.
+ *
+ * Example:
+ * ```ts
+ * import { Mixin, MixedInCtor } from '@stencil/core';
+ *
+ * const AWrap = <B extends MixedInCtor>(Base: B) => {class A extends Base { propA = A }; return A;}
+ * const BWrap = <B extends MixedInCtor>(Base: B) => {class B extends Base { propB = B }; return B;}
+ * const CWrap = <B extends MixedInCtor>(Base: B) => {class C extends Base { propC = C }; return C;}
+ *
+ * class X extends Mixin(AWrap, BWrap, CWrap) {
+ *   render() { return <div>{this.propA} {this.propB} {this.propC}</div>; }
+ * }
+ * ```
+ *
+ * @param mixinFactories mixin factory functions that return a class which extends from the provided class.
+ * @returns a class that is composed from extending each of the provided classes in the order they were provided.
+ */
+export declare function Mixin<const TMixins extends readonly MixinFactory[]>(...mixinFactories: TMixins): abstract new (...args: any[]) => UnionToIntersection<MixinInstance<TMixins[number]>>;
 /**
  * This file gets copied to all distributions of stencil component collections.
  * - no imports
@@ -432,7 +517,7 @@ export interface QueueApi {
 /**
  * Host
  */
-interface HostAttributes {
+export interface HostAttributes {
     class?: string | {
         [className: string]: boolean;
     };
@@ -471,7 +556,7 @@ export interface FunctionalUtilities {
     /**
      * Utility for reading the children of a functional component at runtime.
      * Since the Stencil runtime uses a different interface for children it is
-     * not recommendeded to read the children directly, and is preferable to use
+     * not recommended to read the children directly, and is preferable to use
      * this utility to, for instance, perform a side effect for each child.
      */
     forEach: (children: VNode[], cb: (vnode: ChildNode, index: number, array: ChildNode[]) => void) => void;
@@ -749,6 +834,7 @@ export declare namespace JSXBase {
         hrefLang?: string;
         hreflang?: string;
         media?: string;
+        ping?: string;
         rel?: string;
         target?: string;
         referrerPolicy?: ReferrerPolicy;
@@ -775,7 +861,6 @@ export declare namespace JSXBase {
         cite?: string;
     }
     interface ButtonHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoFocus?: boolean;
         disabled?: boolean;
         form?: string;
         formAction?: string;
@@ -791,6 +876,9 @@ export declare namespace JSXBase {
         name?: string;
         type?: string;
         value?: string | string[] | number;
+        popoverTargetAction?: string;
+        popoverTargetElement?: Element | null;
+        popoverTarget?: string;
     }
     interface CanvasHTMLAttributes<T> extends HTMLAttributes<T> {
         height?: number | string;
@@ -804,7 +892,8 @@ export declare namespace JSXBase {
     }
     interface DetailsHTMLAttributes<T> extends HTMLAttributes<T> {
         open?: boolean;
-        onToggle?: (event: Event) => void;
+        name?: string;
+        onToggle?: (event: ToggleEvent) => void;
     }
     interface DelHTMLAttributes<T> extends HTMLAttributes<T> {
         cite?: string;
@@ -812,6 +901,7 @@ export declare namespace JSXBase {
         datetime?: string;
     }
     interface DialogHTMLAttributes<T> extends HTMLAttributes<T> {
+        onCancel?: (event: Event) => void;
         onClose?: (event: Event) => void;
         open?: boolean;
         returnValue?: string;
@@ -871,6 +961,8 @@ export declare namespace JSXBase {
     }
     interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
         alt?: string;
+        crossOrigin?: string;
+        crossorigin?: string;
         decoding?: 'async' | 'auto' | 'sync';
         importance?: 'low' | 'auto' | 'high';
         height?: number | string;
@@ -892,12 +984,10 @@ export declare namespace JSXBase {
         accept?: string;
         allowdirs?: boolean;
         alt?: string;
-        autoCapitalize?: any;
-        autocapitalize?: any;
+        autoCapitalize?: string;
+        autocapitalize?: string;
         autoComplete?: string;
         autocomplete?: string;
-        autoFocus?: boolean;
-        autofocus?: boolean | string;
         capture?: string;
         checked?: boolean;
         crossOrigin?: string;
@@ -929,6 +1019,8 @@ export declare namespace JSXBase {
         minlength?: number | string;
         multiple?: boolean;
         name?: string;
+        onSelect?: (event: Event) => void;
+        onselect?: (event: Event) => void;
         pattern?: string;
         placeholder?: string;
         readOnly?: boolean;
@@ -947,10 +1039,11 @@ export declare namespace JSXBase {
         webkitdirectory?: boolean;
         webkitEntries?: any;
         width?: number | string;
+        popoverTargetAction?: string;
+        popoverTargetElement?: Element | null;
+        popoverTarget?: string;
     }
     interface KeygenHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoFocus?: boolean;
-        autofocus?: boolean | string;
         challenge?: string;
         disabled?: boolean;
         form?: string;
@@ -963,7 +1056,6 @@ export declare namespace JSXBase {
     interface LabelHTMLAttributes<T> extends HTMLAttributes<T> {
         form?: string;
         htmlFor?: string;
-        htmlfor?: string;
     }
     interface LiHTMLAttributes<T> extends HTMLAttributes<T> {
         value?: string | string[] | number;
@@ -990,6 +1082,8 @@ export declare namespace JSXBase {
         autoPlay?: boolean;
         autoplay?: boolean | string;
         controls?: boolean;
+        controlslist?: 'nodownload' | 'nofullscreen' | 'noremoteplayback';
+        controlsList?: 'nodownload' | 'nofullscreen' | 'noremoteplayback';
         crossOrigin?: string;
         crossorigin?: string;
         loop?: boolean;
@@ -1074,7 +1168,6 @@ export declare namespace JSXBase {
     interface OutputHTMLAttributes<T> extends HTMLAttributes<T> {
         form?: string;
         htmlFor?: string;
-        htmlfor?: string;
         name?: string;
     }
     interface ParamHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -1099,7 +1192,6 @@ export declare namespace JSXBase {
         type?: string;
     }
     interface SelectHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoFocus?: boolean;
         disabled?: boolean;
         form?: string;
         multiple?: boolean;
@@ -1110,11 +1202,13 @@ export declare namespace JSXBase {
         autocomplete?: string;
     }
     interface SourceHTMLAttributes<T> extends HTMLAttributes<T> {
+        height?: number;
         media?: string;
         sizes?: string;
         src?: string;
         srcSet?: string;
         type?: string;
+        width?: number;
     }
     interface StyleHTMLAttributes<T> extends HTMLAttributes<T> {
         media?: string;
@@ -1130,8 +1224,8 @@ export declare namespace JSXBase {
         summary?: string;
     }
     interface TextareaHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoFocus?: boolean;
-        autofocus?: boolean | string;
+        autoComplete?: string;
+        autocomplete?: string;
         cols?: number;
         disabled?: boolean;
         form?: string;
@@ -1140,6 +1234,8 @@ export declare namespace JSXBase {
         minLength?: number;
         minlength?: number | string;
         name?: string;
+        onSelect?: (event: Event) => void;
+        onselect?: (event: Event) => void;
         placeholder?: string;
         readOnly?: boolean;
         readonly?: boolean | string;
@@ -1182,6 +1278,8 @@ export declare namespace JSXBase {
     interface HTMLAttributes<T = HTMLElement> extends DOMAttributes<T> {
         innerHTML?: string;
         accessKey?: string;
+        autoFocus?: boolean;
+        autofocus?: boolean | string;
         class?: string | {
             [className: string]: boolean;
         };
@@ -1193,6 +1291,7 @@ export declare namespace JSXBase {
         draggable?: boolean;
         hidden?: boolean;
         id?: string;
+        inert?: boolean;
         lang?: string;
         spellcheck?: 'true' | 'false' | any;
         style?: {
@@ -1201,6 +1300,7 @@ export declare namespace JSXBase {
         tabIndex?: number;
         tabindex?: number | string;
         title?: string;
+        popover?: string | null;
         inputMode?: string;
         inputmode?: string;
         enterKeyHint?: string;
@@ -1217,8 +1317,8 @@ export declare namespace JSXBase {
         resource?: string;
         typeof?: string;
         vocab?: string;
-        autoCapitalize?: any;
-        autocapitalize?: any;
+        autoCapitalize?: string;
+        autocapitalize?: string;
         autoCorrect?: string;
         autocorrect?: string;
         autoSave?: string;
@@ -1286,7 +1386,7 @@ export declare namespace JSXBase {
         clipPathUnits?: number | string;
         'clip-rule'?: number | string;
         'color-interpolation'?: number | string;
-        'color-interpolation-filters'?: 'auto' | 's-rGB' | 'linear-rGB' | 'inherit';
+        'color-interpolation-filters'?: 'auto' | 'sRGB' | 'linearRGB';
         'color-profile'?: number | string;
         'color-rendering'?: number | string;
         contentScriptType?: number | string;
@@ -1499,6 +1599,13 @@ export declare namespace JSXBase {
         z?: number | string;
         zoomAndPan?: string;
     }
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ToggleEvent) */
+    interface ToggleEvent extends Event {
+        /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ToggleEvent/newState) */
+        readonly newState: string;
+        /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ToggleEvent/oldState) */
+        readonly oldState: string;
+    }
     interface DOMAttributes<T> extends JSXAttributes<T> {
         slot?: string;
         part?: string;
@@ -1509,12 +1616,16 @@ export declare namespace JSXBase {
         onCutCapture?: (event: ClipboardEvent) => void;
         onPaste?: (event: ClipboardEvent) => void;
         onPasteCapture?: (event: ClipboardEvent) => void;
-        onCompositionEnd?: (event: CompositionEvent) => void;
-        onCompositionEndCapture?: (event: CompositionEvent) => void;
-        onCompositionStart?: (event: CompositionEvent) => void;
-        onCompositionStartCapture?: (event: CompositionEvent) => void;
-        onCompositionUpdate?: (event: CompositionEvent) => void;
-        onCompositionUpdateCapture?: (event: CompositionEvent) => void;
+        onCompositionend?: (event: CompositionEvent) => void;
+        onCompositionendCapture?: (event: CompositionEvent) => void;
+        onCompositionstart?: (event: CompositionEvent) => void;
+        onCompositionstartCapture?: (event: CompositionEvent) => void;
+        onCompositionupdate?: (event: CompositionEvent) => void;
+        onCompositionupdateCapture?: (event: CompositionEvent) => void;
+        onBeforeToggle?: (event: ToggleEvent) => void;
+        onBeforeToggleCapture?: (event: ToggleEvent) => void;
+        onToggle?: (event: ToggleEvent) => void;
+        onToggleCapture?: (event: ToggleEvent) => void;
         onFocus?: (event: FocusEvent) => void;
         onFocusCapture?: (event: FocusEvent) => void;
         onFocusin?: (event: FocusEvent) => void;
@@ -1525,8 +1636,8 @@ export declare namespace JSXBase {
         onBlurCapture?: (event: FocusEvent) => void;
         onChange?: (event: Event) => void;
         onChangeCapture?: (event: Event) => void;
-        onInput?: (event: Event) => void;
-        onInputCapture?: (event: Event) => void;
+        onInput?: (event: InputEvent) => void;
+        onInputCapture?: (event: InputEvent) => void;
         onReset?: (event: Event) => void;
         onResetCapture?: (event: Event) => void;
         onSubmit?: (event: Event) => void;
@@ -1544,7 +1655,7 @@ export declare namespace JSXBase {
         onKeyUp?: (event: KeyboardEvent) => void;
         onKeyUpCapture?: (event: KeyboardEvent) => void;
         onAuxClick?: (event: MouseEvent) => void;
-        onClick?: (event: MouseEvent) => void;
+        onClick?: (event: PointerEvent) => void;
         onClickCapture?: (event: MouseEvent) => void;
         onContextMenu?: (event: MouseEvent) => void;
         onContextMenuCapture?: (event: MouseEvent) => void;
@@ -1616,8 +1727,16 @@ export declare namespace JSXBase {
         onAnimationEndCapture?: (event: AnimationEvent) => void;
         onAnimationIteration?: (event: AnimationEvent) => void;
         onAnimationIterationCapture?: (event: AnimationEvent) => void;
+        onTransitionCancel?: (event: TransitionEvent) => void;
+        onTransitionCancelCapture?: (event: TransitionEvent) => void;
         onTransitionEnd?: (event: TransitionEvent) => void;
         onTransitionEndCapture?: (event: TransitionEvent) => void;
+        onTransitionRun?: (event: TransitionEvent) => void;
+        onTransitionRunCapture?: (event: TransitionEvent) => void;
+        onTransitionStart?: (event: TransitionEvent) => void;
+        onTransitionStartCapture?: (event: TransitionEvent) => void;
+        [key: `aria-${string}`]: string | boolean | undefined;
+        [key: `aria${string}`]: string | boolean | undefined;
     }
 }
 export interface JSXAttributes<T = Element> {

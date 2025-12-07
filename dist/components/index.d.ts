@@ -1,5 +1,8 @@
-/* FlexResizer custom elements */
-export { FlexResizer as FlexResizer } from '../types/components/flex-resizer/flex-resizer';
+/**
+ * Get the base path to where the assets can be found. Use "setAssetPath(path)"
+ * if the path needs to be customized.
+ */
+export declare const getAssetPath: (path: string) => string;
 
 /**
  * Used to manually set the base path where assets can be found.
@@ -28,4 +31,3 @@ export interface SetPlatformOptions {
   rel?: (el: EventTarget, eventName: string, listener: EventListenerOrEventListenerObject, options: boolean | AddEventListenerOptions) => void;
 }
 export declare const setPlatformOptions: (opts: SetPlatformOptions) => void;
-export * from '../types';
