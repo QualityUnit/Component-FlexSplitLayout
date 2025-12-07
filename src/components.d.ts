@@ -7,10 +7,25 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface FlexResizer {
+        /**
+          * @default 0
+         */
         "depth": number;
+        /**
+          * @default false
+         */
         "disabled": boolean;
+        /**
+          * @default ""
+         */
         "name": string;
+        /**
+          * @default true
+         */
         "overrideIframe": boolean;
+        /**
+          * @default true
+         */
         "save": boolean;
     }
 }
@@ -27,10 +42,25 @@ declare global {
 }
 declare namespace LocalJSX {
     interface FlexResizer {
+        /**
+          * @default 0
+         */
         "depth"?: number;
+        /**
+          * @default false
+         */
         "disabled"?: boolean;
+        /**
+          * @default ""
+         */
         "name"?: string;
+        /**
+          * @default true
+         */
         "overrideIframe"?: boolean;
+        /**
+          * @default true
+         */
         "save"?: boolean;
     }
     interface IntrinsicElements {
