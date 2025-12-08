@@ -1,6 +1,5 @@
-import { b as bootstrapLazy } from './index-DrRobMHa.js';
-export { s as setNonce } from './index-DrRobMHa.js';
-import { g as globalScripts } from './app-globals-DQuL1Twl.js';
+import { g as globalScripts, b as bootstrapLazy } from './index-DZODx4ga.js';
+export { s as setNonce } from './index-DZODx4ga.js';
 
 const defineCustomElements = async (win, options) => {
   if (typeof window === 'undefined') return undefined;

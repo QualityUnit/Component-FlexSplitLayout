@@ -6,16 +6,72 @@
     <title>Stencil Component Starter</title>
 
     <script src="dist/flex-resizer/flex-resizer.esm.js" type="module"></script>
+    <style type="text/css">
+      .message, .actionbox {
+        display: flex;
+        flex-direction: column;
+        font-family: Courier, Arial;
+        font-size: 14px;
+      }
+      .message > div,
+      .actionbox > div {
+        height: 100px;
+        background-color: #ddd;
+        text-align: center;
+        flex: 1;
+        padding: 5px;
+        border: 1px solid #a1b2c3;
+      }
+      .message div:nth-child(2n+1),
+      .actionbox div:nth-child(2n+1) {
+        background-color: #eee;
+        border-width: 0 4px;
+      }
+      .message > div:first-child,
+      .actionbox > div:first-child {flex: 2;}
+      .h-flex {
+        display: flex;
+      }
+      .h-flex div { flex: 1; padding: 5px; min-height: 50px;}
+      .h-flex > div:nth-child(2n+1) {background-color: #bbb;}
+      .h-flex .h-flex {background-color: lightcoral;}
+      .c3 {min-width: 100px;}
+    </style>
   </head>
   <body>
-    <div style=" display: flex;
-            flex-direction: column;
-            height: 505px;
-            width: 800px;
-">
-    <div style="flex-shrink: 1; flex-basis: 20%; flex-grow: 0.5;">This is the first child<br>1<br>2<br>3<br>4</div>
-      <flex-resizer style="height: 5px; background-color: aqua"></flex-resizer>
-    <div style="flex-shrink: 1; flex-basis: 200px; flex-grow: 0.5;">This is the next child<br>1<br>2<br>3<br>4</div>
+    <div style="display: flex;flex-direction: column;height: 505px;width: 800px;margin: 0 auto;overflow: hidden;border: 1px solid #ddd; border-radius: 10px;">
+      <div class="message" style="flex-shrink: 1; flex-basis: 20%; flex-grow: 0.5;">
+        <div>This is the first child</div>
+        <div class="h-flex">
+          <div style="flex-shrink: 1; display: flex;">
+            <div>1a</div>
+          </div>
+          <flex-resizer style="width: 0; border-left: 4px double red;height: 100%; margin: 0 2px; cursor: ew-resize;"></flex-resizer>
+          <div style="flex-shrink:1; display: flex;">
+            <div>1b</div>
+            <div>1c</div>
+          </div>
+        </div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+      </div>
+      <flex-resizer style="height: 0;border-bottom: 4px double red; cursor: n-resize"></flex-resizer>
+      <div class="actionbox" style="flex-shrink: 1; flex-basis: 200px; flex-grow: 0.5;">
+        <div>This is the next child</div>
+        <div>1</div>
+        <div>2</div>
+        <div class="h-flex">
+          <div style="flex: 0 0 20%">3a</div>
+          <div class="h-flex">
+            <div>3b.a</div>
+            <div>3b.b</div>
+          </div>
+          <flex-resizer style="width: 0; height: 100%; border-left: 4px double red; margin: 0 2px; overflow: hidden; cursor: ew-resize;"></flex-resizer>
+          <div class="c3">3c</div>
+        </div>
+        <div>4</div>
+      </div>
     </div>
   </body>
 </html>

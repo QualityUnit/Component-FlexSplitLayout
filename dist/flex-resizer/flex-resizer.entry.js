@@ -195,4 +195,4 @@ const FlexResizer = class {
 FlexResizer.style = flexResizerCss;
 
 export { FlexResizer as flex_resizer };
-//# sourceMappingURL=flex-resizer.entry.js.map
+//# sourceMappingURL=flex-resizer.entry.esm.js.map

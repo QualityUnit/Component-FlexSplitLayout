@@ -1,1 +1,1 @@
-{"file":"index.js","mappings":"","names":[],"sources":[],"sourcesContent":[],"version":3}
+{"file":"index.js","mappings":";;AAAO,MAAM,aAAa,GAAG,MAAM,EAAE;AAC9B,MAAM,YAAY,GAAG,EAAE;;","names":[],"sources":["@stencil/core/internal/app-globals"],"sourcesContent":["export const globalScripts = () => {};\nexport const globalStyles = \"\";\n"],"version":3}

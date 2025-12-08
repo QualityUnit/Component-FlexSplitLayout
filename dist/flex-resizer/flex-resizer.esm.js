@@ -1,2 +1,48 @@
-import{p as e,b as r}from"./p-DrRobMHa.js";export{s as setNonce}from"./p-DrRobMHa.js";import{g as a}from"./p-DQuL1Twl.js";var t=()=>{const r=import.meta.url;const a={};if(r!==""){a.resourcesUrl=new URL(".",r).href}return e(a)};t().then((async e=>{await a();return r([["p-0c9e0dc4",[[258,"flex-resizer",{depth:[2],overrideIframe:[4,"override-iframe"],name:[1],save:[4],disabled:[4]},[[0,"mousedown","resizeStart"],[1,"touchstart","resizeStart"]],{name:["watchName"],disabled:["watchDisabled"]}]]]],e)}));
+import { B as BUILD, c as consoleDevInfo, H, w as win, N as NAMESPACE, p as promiseResolve, g as globalScripts, b as bootstrapLazy } from './index-DZODx4ga.js';
+export { s as setNonce } from './index-DZODx4ga.js';
+
+/*
+ Stencil Client Patch Browser v4.38.3 | MIT Licensed | https://stenciljs.com
+ */
+
+var patchBrowser = () => {
+  if (BUILD.isDev && !BUILD.isTesting) {
+    consoleDevInfo("Running in development mode.");
+  }
+  if (BUILD.cloneNodeFix) {
+    patchCloneNodeFix(H.prototype);
+  }
+  const scriptElm = BUILD.scriptDataOpts ? win.document && Array.from(win.document.querySelectorAll("script")).find(
+    (s) => new RegExp(`/${NAMESPACE}(\\.esm)?\\.js($|\\?|#)`).test(s.src) || s.getAttribute("data-stencil-namespace") === NAMESPACE
+  ) : null;
+  const importMeta = import.meta.url;
+  const opts = BUILD.scriptDataOpts ? (scriptElm || {})["data-opts"] || {} : {};
+  if (importMeta !== "") {
+    opts.resourcesUrl = new URL(".", importMeta).href;
+  }
+  return promiseResolve(opts);
+};
+var patchCloneNodeFix = (HTMLElementPrototype) => {
+  const nativeCloneNodeFn = HTMLElementPrototype.cloneNode;
+  HTMLElementPrototype.cloneNode = function(deep) {
+    if (this.nodeName === "TEMPLATE") {
+      return nativeCloneNodeFn.call(this, deep);
+    }
+    const clonedNode = nativeCloneNodeFn.call(this, false);
+    const srcChildNodes = this.childNodes;
+    if (deep) {
+      for (let i = 0; i < srcChildNodes.length; i++) {
+        if (srcChildNodes[i].nodeType !== 2) {
+          clonedNode.appendChild(srcChildNodes[i].cloneNode(true));
+        }
+      }
+    }
+    return clonedNode;
+  };
+};
+
+patchBrowser().then(async (options) => {
+  await globalScripts();
+  return bootstrapLazy([["flex-resizer",[[258,"flex-resizer",{"depth":[2],"overrideIframe":[4,"override-iframe"],"name":[1],"save":[4],"disabled":[4]},[[0,"mousedown","resizeStart"],[1,"touchstart","resizeStart"]],{"name":["watchName"],"disabled":["watchDisabled"]}]]]], options);
+});
 //# sourceMappingURL=flex-resizer.esm.js.map

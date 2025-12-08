@@ -1,6 +1,6 @@
 'use strict';
 
-var index = require('./index-Bx_uMSti.js');
+var index = require('./index-Bn1lGR-8.js');
 
 const flexResizerCss = ".sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}";
 
