@@ -47,3 +47,10 @@ The first step for all three of these strategies is to [publish to NPM](https://
 - Run `npm install my-component --save`
 - Add an import to the npm packages `import my-component;`
 - Then you can use the element anywhere in your template, JSX, html etc
+
+## Publish to NPM
+To publish component to NPM, you need to have sufficient permissions. Then run the following command on main branch to bump the version, push the tags and publish to NPM.
+```bash
+npm version patch
+git push --tags && git push
+```
