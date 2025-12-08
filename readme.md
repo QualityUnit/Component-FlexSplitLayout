@@ -4,6 +4,9 @@
 
 This component can be used to create resizable using CSS Flexbox.
 
+## Demo
+You can see a working demo of this component [here](https://qualityunit.github.io/Component-FlexSplitLayout/).
+
 ## Getting Started
 
 To start building a new web component using Stencil, clone this repo to a new directory:
