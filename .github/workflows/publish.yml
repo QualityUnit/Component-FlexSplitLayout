@@ -1,12 +1,16 @@
-name: publish demo for recent changes
+name: Publish package to npm
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
 
 jobs:
-  publish-demo:
+  publish:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -20,11 +24,4 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
-      - run: |
-          mkdir site
-          cp src/index.html site
-          cp -r dist site
-      - name: Deploy demo 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: site
+      - run: npm publish

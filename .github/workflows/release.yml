@@ -1,16 +1,10 @@
-name: publish Node.js Package
+name: Release package by creating of a new tag
 
 on:
-  push:
-    tags:
-      - 'v*'
-
-permissions:
-  id-token: write  # Required for OIDC
-  contents: read
+  workflow_dispatch:
 
 jobs:
-  build:
+  check_and_release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -21,19 +15,5 @@ jobs:
           always-auth: true
       - run: npm ci
       - run: npm test
-
-  publish-gpr:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          registry-url: 'https://registry.npmjs.org'
-      - name: Update npm
-        run: npm install -g npm@latest
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
-      - run: npm publish
+      - run: npm version patch
+      - run: git push --tags && git push
