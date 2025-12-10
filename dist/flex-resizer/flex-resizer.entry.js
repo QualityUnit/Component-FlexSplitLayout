@@ -1,4 +1,4 @@
-import { r as registerInstance, h, a as getElement } from './index-BYw9515x.js';
+import { r as registerInstance, h, a as getElement } from './index-DI_Z65Jt.js';
 
 const flexResizerCss = () => `.sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}`;
 
@@ -19,7 +19,7 @@ const FlexResizer = class {
         this.handleKeyDown = this.handleKeyDown.bind(this);
     }
     render() {
-        return h("div", { key: '54788d664370c38a7af54555088dd2fc7b42fd22' });
+        return h("div", { key: '4e2e9539fcfe4abdc147f7e6a24803bdcd46d6ca' });
     }
     resizeStart(event) {
         let element = this.normalizeDepth();
@@ -146,7 +146,13 @@ const FlexResizer = class {
         }
         return element;
     }
-    connectedCallback() {
+    /**
+     * Public method to refresh the component layout and restore saved sizes
+     */
+    async refresh() {
+        this.initialize();
+    }
+    initialize() {
         const element = this.normalizeDepth();
         if (getComputedStyle(element.parentElement)["flex-direction"] == "column" || getComputedStyle(element.parentElement)["flex-direction"] == "column-reverse") {
             this.el.classList.remove("row-resizer");
@@ -171,9 +177,12 @@ const FlexResizer = class {
         this.a.style["flex-grow"] = savedA;
         this.b.style["flex-grow"] = localStorage.getItem(this.localStorageKey + "b");
     }
+    connectedCallback() {
+        this.initialize();
+    }
     watchName(name) {
         this.localStorageKey = "flex-resizer-" + name;
-        this.connectedCallback();
+        this.initialize();
     }
     watchDisabled(disabled) {
         let element = this.normalizeDepth();
@@ -182,7 +191,7 @@ const FlexResizer = class {
             this.b.style["flex-grow"] = null;
         }
         else {
-            this.connectedCallback();
+            this.initialize();
         }
         element.style.display = disabled ? "none" : "block";
     }

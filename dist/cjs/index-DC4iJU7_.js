@@ -1,5 +1,7 @@
+'use strict';
+
 const NAMESPACE = 'flex-resizer';
-const BUILD = /* flex-resizer */ { allRenderFn: true, appendChildSlotFix: false, asyncLoading: true, asyncQueue: false, attachStyles: true, cloneNodeFix: false, constructableCSS: true, cssAnnotations: true, deserializer: false, devTools: false, element: false, event: false, experimentalScopedSlotChanges: false, experimentalSlotFixes: false, formAssociated: false, hasRenderFn: true, hostListener: true, hostListenerTarget: false, hostListenerTargetBody: false, hostListenerTargetDocument: false, hostListenerTargetParent: false, hostListenerTargetWindow: false, hotModuleReplacement: false, hydrateClientSide: false, hydrateServerSide: false, hydratedAttribute: false, hydratedClass: true, hydratedSelectorName: "hydrated", initializeNextTick: false, invisiblePrehydration: true, isDebug: false, isDev: true, isTesting: true, lazyLoad: true, lifecycle: false, lifecycleDOMEvents: true, member: true, method: false, mode: false, observeAttribute: true, profile: false, prop: true, propBoolean: true, propChangeCallback: true, propMutable: false, propNumber: true, propString: true, reflect: false, scoped: true, scopedSlotTextContentFix: false, scriptDataOpts: false, serializer: false, shadowDelegatesFocus: false, shadowDom: false, slot: false, slotChildNodesFix: false, slotRelocation: false, state: false, style: true, svg: false, taskQueue: true, transformTagName: false, updatable: true, vdomAttribute: true, vdomClass: false, vdomFunctional: false, vdomKey: true, vdomListener: false, vdomPropOrAttr: false, vdomRef: false, vdomRender: true, vdomStyle: false, vdomText: false, vdomXlink: false };
+const BUILD = /* flex-resizer */ { allRenderFn: true, appendChildSlotFix: false, asyncLoading: true, asyncQueue: false, attachStyles: true, cloneNodeFix: false, constructableCSS: true, cssAnnotations: true, deserializer: false, devTools: false, element: false, event: false, experimentalScopedSlotChanges: false, experimentalSlotFixes: false, formAssociated: false, hasRenderFn: true, hostListener: true, hostListenerTarget: false, hostListenerTargetBody: false, hostListenerTargetDocument: false, hostListenerTargetParent: false, hostListenerTargetWindow: false, hotModuleReplacement: false, hydrateClientSide: false, hydrateServerSide: false, hydratedAttribute: false, hydratedClass: true, hydratedSelectorName: "hydrated", initializeNextTick: false, invisiblePrehydration: true, isDebug: false, isDev: true, isTesting: true, lazyLoad: true, lifecycle: false, lifecycleDOMEvents: true, member: true, method: true, mode: false, observeAttribute: true, profile: false, prop: true, propBoolean: true, propChangeCallback: true, propMutable: false, propNumber: true, propString: true, reflect: false, scoped: true, scopedSlotTextContentFix: false, scriptDataOpts: false, serializer: false, shadowDelegatesFocus: false, shadowDom: false, slot: false, slotChildNodesFix: false, slotRelocation: false, state: false, style: true, svg: false, taskQueue: true, transformTagName: false, updatable: true, vdomAttribute: true, vdomClass: false, vdomFunctional: false, vdomKey: true, vdomListener: false, vdomPropOrAttr: false, vdomRef: false, vdomRender: true, vdomStyle: false, vdomText: false, vdomXlink: false };
 const Env = /* flex-resizer */ {};
 
 const globalScripts = () => {};
@@ -4411,7 +4413,18 @@ var insertChildVNodeAnnotations = (doc, vnodeChild, cmpData, hostId, depth, inde
   }
 };
 
-export { BUILD as B, H, NAMESPACE as N, getElement as a, bootstrapLazy as b, consoleDevInfo as c, globalScripts as g, h, promiseResolve as p, registerInstance as r, setNonce as s, win as w };
-//# sourceMappingURL=index-BYw9515x.js.map
+exports.BUILD = BUILD;
+exports.H = H;
+exports.NAMESPACE = NAMESPACE;
+exports.bootstrapLazy = bootstrapLazy;
+exports.consoleDevInfo = consoleDevInfo;
+exports.getElement = getElement;
+exports.globalScripts = globalScripts;
+exports.h = h;
+exports.promiseResolve = promiseResolve;
+exports.registerInstance = registerInstance;
+exports.setNonce = setNonce;
+exports.win = win;
+//# sourceMappingURL=index-DC4iJU7_.js.map
 
-//# sourceMappingURL=index-BYw9515x.js.map
+//# sourceMappingURL=index-DC4iJU7_.js.map

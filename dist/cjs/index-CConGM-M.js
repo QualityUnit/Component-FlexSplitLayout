@@ -68,6 +68,9 @@ var registerHost = (hostElement, cmpMeta) => {
     $serializerValues$: /* @__PURE__ */ new Map()
   };
   {
+    hostRef.$onInstancePromise$ = new Promise((r) => hostRef.$onInstanceResolve$ = r);
+  }
+  {
     hostRef.$onReadyPromise$ = new Promise((r) => hostRef.$onReadyResolve$ = r);
     hostElement["s-p"] = [];
     hostElement["s-rc"] = [];
@@ -884,6 +887,9 @@ var postUpdateComponent = (hostRef) => {
     endPostUpdate();
   }
   {
+    hostRef.$onInstanceResolve$(elm);
+  }
+  {
     if (hostRef.$onRenderResolve$) {
       hostRef.$onRenderResolve$();
       hostRef.$onRenderResolve$ = void 0;
@@ -1049,6 +1055,17 @@ var proxyComponent = (Cstr, cmpMeta, flags) => {
                 });
               }
             }
+          }
+        });
+      } else if (flags & 1 /* isElementConstructor */ && memberFlags & 64 /* Method */) {
+        Object.defineProperty(prototype, memberName, {
+          value(...args) {
+            var _a2;
+            const ref = getHostRef(this);
+            return (_a2 = ref == null ? void 0 : ref.$onInstancePromise$) == null ? void 0 : _a2.then(() => {
+              var _a3;
+              return (_a3 = ref.$lazyInstance$) == null ? void 0 : _a3[memberName](...args);
+            });
           }
         });
       }
@@ -1423,6 +1440,6 @@ exports.h = h;
 exports.promiseResolve = promiseResolve;
 exports.registerInstance = registerInstance;
 exports.setNonce = setNonce;
-//# sourceMappingURL=index-DZje0i2M.js.map
+//# sourceMappingURL=index-CConGM-M.js.map
 
-//# sourceMappingURL=index-DZje0i2M.js.map
+//# sourceMappingURL=index-CConGM-M.js.map

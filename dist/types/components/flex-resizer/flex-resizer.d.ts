@@ -31,6 +31,11 @@ export declare class FlexResizer {
     computeSize(element: HTMLElement): number;
     handleResizeEvent(event: TouchEvent | MouseEvent): Touch | MouseEvent;
     normalizeDepth(): HTMLElement;
+    /**
+     * Public method to refresh the component layout and restore saved sizes
+     */
+    refresh(): Promise<void>;
+    private initialize;
     connectedCallback(): void;
     watchName(name: string): void;
     watchDisabled(disabled: boolean): void;

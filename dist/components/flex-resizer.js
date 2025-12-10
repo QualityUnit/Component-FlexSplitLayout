@@ -22,7 +22,7 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class FlexResizer extends
         this.handleKeyDown = this.handleKeyDown.bind(this);
     }
     render() {
-        return h("div", { key: '54788d664370c38a7af54555088dd2fc7b42fd22' });
+        return h("div", { key: '4e2e9539fcfe4abdc147f7e6a24803bdcd46d6ca' });
     }
     resizeStart(event) {
         let element = this.normalizeDepth();
@@ -149,7 +149,13 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class FlexResizer extends
         }
         return element;
     }
-    connectedCallback() {
+    /**
+     * Public method to refresh the component layout and restore saved sizes
+     */
+    async refresh() {
+        this.initialize();
+    }
+    initialize() {
         const element = this.normalizeDepth();
         if (getComputedStyle(element.parentElement)["flex-direction"] == "column" || getComputedStyle(element.parentElement)["flex-direction"] == "column-reverse") {
             this.el.classList.remove("row-resizer");
@@ -174,9 +180,12 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class FlexResizer extends
         this.a.style["flex-grow"] = savedA;
         this.b.style["flex-grow"] = localStorage.getItem(this.localStorageKey + "b");
     }
+    connectedCallback() {
+        this.initialize();
+    }
     watchName(name) {
         this.localStorageKey = "flex-resizer-" + name;
-        this.connectedCallback();
+        this.initialize();
     }
     watchDisabled(disabled) {
         let element = this.normalizeDepth();
@@ -185,7 +194,7 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class FlexResizer extends
             this.b.style["flex-grow"] = null;
         }
         else {
-            this.connectedCallback();
+            this.initialize();
         }
         element.style.display = disabled ? "none" : "block";
     }
@@ -200,7 +209,8 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class FlexResizer extends
         "overrideIframe": [4, "override-iframe"],
         "name": [1],
         "save": [4],
-        "disabled": [4]
+        "disabled": [4],
+        "refresh": [64]
     }, [[0, "mousedown", "resizeStart"], [1, "touchstart", "resizeStart"]], {
         "name": ["watchName"],
         "disabled": ["watchDisabled"]

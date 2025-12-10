@@ -24,6 +24,10 @@ export namespace Components {
          */
         "overrideIframe": boolean;
         /**
+          * Public method to refresh the component layout and restore saved sizes
+         */
+        "refresh": () => Promise<void>;
+        /**
           * @default true
          */
         "save": boolean;

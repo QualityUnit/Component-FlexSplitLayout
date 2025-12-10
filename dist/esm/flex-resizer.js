@@ -1,5 +1,5 @@
-import { B as BUILD, c as consoleDevInfo, H, w as win, N as NAMESPACE, p as promiseResolve, g as globalScripts, b as bootstrapLazy } from './index-BYw9515x.js';
-export { s as setNonce } from './index-BYw9515x.js';
+import { B as BUILD, c as consoleDevInfo, H, w as win, N as NAMESPACE, p as promiseResolve, g as globalScripts, b as bootstrapLazy } from './index-DI_Z65Jt.js';
+export { s as setNonce } from './index-DI_Z65Jt.js';
 
 /*
  Stencil Client Patch Browser v4.39.0 | MIT Licensed | https://stenciljs.com
@@ -43,7 +43,7 @@ var patchCloneNodeFix = (HTMLElementPrototype) => {
 
 patchBrowser().then(async (options) => {
   await globalScripts();
-  return bootstrapLazy([["flex-resizer",[[258,"flex-resizer",{"depth":[2],"overrideIframe":[4,"override-iframe"],"name":[1],"save":[4],"disabled":[4]},[[0,"mousedown","resizeStart"],[1,"touchstart","resizeStart"]],{"name":["watchName"],"disabled":["watchDisabled"]}]]]], options);
+  return bootstrapLazy([["flex-resizer",[[258,"flex-resizer",{"depth":[2],"overrideIframe":[4,"override-iframe"],"name":[1],"save":[4],"disabled":[4],"refresh":[64]},[[0,"mousedown","resizeStart"],[1,"touchstart","resizeStart"]],{"name":["watchName"],"disabled":["watchDisabled"]}]]]], options);
 });
 //# sourceMappingURL=flex-resizer.js.map
 

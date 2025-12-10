@@ -15,7 +15,7 @@ export class FlexResizer {
         this.handleKeyDown = this.handleKeyDown.bind(this);
     }
     render() {
-        return h("div", { key: '54788d664370c38a7af54555088dd2fc7b42fd22' });
+        return h("div", { key: '4e2e9539fcfe4abdc147f7e6a24803bdcd46d6ca' });
     }
     resizeStart(event) {
         let element = this.normalizeDepth();
@@ -142,7 +142,13 @@ export class FlexResizer {
         }
         return element;
     }
-    connectedCallback() {
+    /**
+     * Public method to refresh the component layout and restore saved sizes
+     */
+    async refresh() {
+        this.initialize();
+    }
+    initialize() {
         const element = this.normalizeDepth();
         if (getComputedStyle(element.parentElement)["flex-direction"] == "column" || getComputedStyle(element.parentElement)["flex-direction"] == "column-reverse") {
             this.el.classList.remove("row-resizer");
@@ -167,9 +173,12 @@ export class FlexResizer {
         this.a.style["flex-grow"] = savedA;
         this.b.style["flex-grow"] = localStorage.getItem(this.localStorageKey + "b");
     }
+    connectedCallback() {
+        this.initialize();
+    }
     watchName(name) {
         this.localStorageKey = "flex-resizer-" + name;
-        this.connectedCallback();
+        this.initialize();
     }
     watchDisabled(disabled) {
         let element = this.normalizeDepth();
@@ -178,7 +187,7 @@ export class FlexResizer {
             this.b.style["flex-grow"] = null;
         }
         else {
-            this.connectedCallback();
+            this.initialize();
         }
         element.style.display = disabled ? "none" : "block";
     }
@@ -295,6 +304,27 @@ export class FlexResizer {
                 "reflect": false,
                 "attribute": "disabled",
                 "defaultValue": "false"
+            }
+        };
+    }
+    static get methods() {
+        return {
+            "refresh": {
+                "complexType": {
+                    "signature": "() => Promise<void>",
+                    "parameters": [],
+                    "references": {
+                        "Promise": {
+                            "location": "global",
+                            "id": "global::Promise"
+                        }
+                    },
+                    "return": "Promise<void>"
+                },
+                "docs": {
+                    "text": "Public method to refresh the component layout and restore saved sizes",
+                    "tags": []
+                }
             }
         };
     }
