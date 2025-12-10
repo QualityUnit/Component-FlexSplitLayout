@@ -3,17 +3,89 @@ name: Release package by creating of a new tag
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   check_and_release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.COMPONENTS_PUBLISH_PAT }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: 'npm'
           always-auth: true
-      - run: npm ci
-      - run: npm test
-      - run: npm version patch
-      - run: git push --tags && git push
+      - run: git config --global user.email "dev-ci@qualityunit.com" && git config --global user.name "QualityUnitCI"
+      - run: npm ci && npm run check
+      - run: npm version patch --no-git-tag-version
+      - name: Create release branch and PR
+        id: create-pr
+        env:
+          GH_TOKEN: ${{ secrets.COMPONENTS_PUBLISH_PAT }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          BRANCH="release-v$VERSION"
+
+          # Create and push to release branch
+          git checkout -b $BRANCH
+          git add package.json package-lock.json
+          git commit -m "Release v$VERSION"
+          git push origin $BRANCH
+
+          # Create PR and capture the number
+          PR_URL=$(gh pr create \
+            --title "Release v$VERSION" \
+            --body "Automated release for version $VERSION" \
+            --base main \
+            --head $BRANCH)
+
+          PR_NUMBER=$(echo $PR_URL | grep -o '[0-9]*$')
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Approve PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Use GITHUB_TOKEN (github-actions bot) to approve the PR created by PAT user
+          gh pr review ${{ steps.create-pr.outputs.pr_number }} --approve --body "Auto-approved by release workflow"
+
+      - name: Enable auto-merge and wait
+        env:
+          GH_TOKEN: ${{ secrets.COMPONENTS_PUBLISH_PAT }}
+        run: |
+          BRANCH="${{ steps.create-pr.outputs.branch }}"
+
+          # Enable auto-merge
+          gh pr merge $BRANCH --auto --rebase --delete-branch
+
+          # Wait for PR to be merged (max 5 minutes)
+          for i in {1..60}; do
+            if gh pr view $BRANCH --json state --jq '.state' | grep -q "MERGED"; then
+              echo "PR merged successfully"
+              exit 0
+            fi
+            echo "Waiting for PR to merge... ($i/60)"
+            sleep 5
+          done
+
+          echo "ERROR: PR did not merge within timeout"
+          exit 1
+
+      - name: Push tag
+        env:
+          GH_TOKEN: ${{ secrets.COMPONENTS_PUBLISH_PAT }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+
+          # Checkout main and pull latest
+          git checkout main
+          git pull origin main
+
+          # Create and push tag
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
