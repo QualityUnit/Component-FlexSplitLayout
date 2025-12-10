@@ -1,6 +1,6 @@
 {
   "name": "@qualityunit/flex-resizer",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Stencil Component Starter",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
