@@ -1,10 +1,10 @@
 'use strict';
 
-var index = require('./index-Bn1lGR-8.js');
+var index = require('./index-miHPKMQ3.js');
 
 var _documentCurrentScript = typeof document !== 'undefined' ? document.currentScript : null;
 /*
- Stencil Client Patch Browser v4.38.3 | MIT Licensed | https://stenciljs.com
+ Stencil Client Patch Browser v4.39.0 | MIT Licensed | https://stenciljs.com
  */
 
 var patchBrowser = () => {
@@ -49,4 +49,6 @@ patchBrowser().then(async (options) => {
 });
 
 exports.setNonce = index.setNonce;
+//# sourceMappingURL=flex-resizer.cjs.js.map
+
 //# sourceMappingURL=flex-resizer.cjs.js.map

@@ -1,6 +1,6 @@
-import { proxyCustomElement, HTMLElement, h } from '@stencil/core/internal/client';
+import { proxyCustomElement, HTMLElement, h, transformTag } from '@stencil/core/internal/client';
 
-const flexResizerCss = ".sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}";
+const flexResizerCss = () => `.sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}`;
 
 const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class FlexResizer extends HTMLElement {
     constructor(registerHost) {
@@ -194,7 +194,7 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class FlexResizer extends
         "name": ["watchName"],
         "disabled": ["watchDisabled"]
     }; }
-    static get style() { return flexResizerCss; }
+    static get style() { return flexResizerCss(); }
 }, [258, "flex-resizer", {
         "depth": [2],
         "overrideIframe": [4, "override-iframe"],
@@ -212,8 +212,8 @@ function defineCustomElement$1() {
     const components = ["flex-resizer"];
     components.forEach(tagName => { switch (tagName) {
         case "flex-resizer":
-            if (!customElements.get(tagName)) {
-                customElements.define(tagName, FlexResizer$1);
+            if (!customElements.get(transformTag(tagName))) {
+                customElements.define(transformTag(tagName), FlexResizer$1);
             }
             break;
     } });

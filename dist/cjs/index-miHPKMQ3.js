@@ -8,7 +8,7 @@ const globalScripts = () => {};
 const globalStyles = "";
 
 /*
- Stencil Client Platform v4.38.3 | MIT Licensed | https://stenciljs.com
+ Stencil Client Platform v4.39.0 | MIT Licensed | https://stenciljs.com
  */
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
@@ -1263,6 +1263,9 @@ var hydrateScopedToShadow = () => {
   }
 };
 var h = (nodeName, vnodeData, ...children) => {
+  if (typeof nodeName === "string") {
+    nodeName = transformTag(nodeName);
+  }
   let child = null;
   let key = null;
   let slotName = null;
@@ -1445,7 +1448,7 @@ var initializeClientHydrate = (hostElm, tagName, hostId, hostRef) => {
     const orgLocationNode = plt.$orgLocNodes$.get(orgLocationId);
     const node = childRenderNode.$elm$;
     if (!shadowRoot) {
-      node["s-hn"] = tagName.toUpperCase();
+      node["s-hn"] = transformTag(tagName).toUpperCase();
       if (childRenderNode.$tag$ === "slot") {
         node["s-cr"] = hostElm["s-cr"];
       }
@@ -3009,7 +3012,7 @@ render() {
   if (BUILD.experimentalScopedSlotChanges && cmpMeta.$flags$ & 2 /* scopedCssEncapsulation */) {
     const children = rootVnode.$elm$.__childNodes || rootVnode.$elm$.childNodes;
     for (const childNode of children) {
-      if (childNode["s-hn"] !== hostTagName && !childNode["s-sh"]) {
+      if (childNode["s-hn"] !== hostTagName && !childNode["s-sh"] && childNode.nodeType === 1 /* ElementNode */) {
         if (isInitialLoad && childNode["s-ih"] == null) {
           childNode["s-ih"] = (_e = childNode.hidden) != null ? _e : false;
         }
@@ -3846,7 +3849,10 @@ var disconnectedCallback = async (elm) => {
 
 // src/runtime/bootstrap-custom-element.ts
 var defineCustomElement = (Cstr, compactMeta) => {
-  customElements.define(compactMeta[1], proxyCustomElement(Cstr, compactMeta));
+  customElements.define(
+    transformTag(compactMeta[1]),
+    proxyCustomElement(Cstr, compactMeta)
+  );
 };
 var proxyCustomElement = (Cstr, compactMeta) => {
   const cmpMeta = {
@@ -4034,7 +4040,7 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
       if (BUILD.shadowDom && !supportsShadow && cmpMeta.$flags$ & 1 /* shadowDomEncapsulation */) {
         cmpMeta.$flags$ |= 8 /* needsShadowDomShim */;
       }
-      const tagName = BUILD.transformTagName && options.transformTagName ? options.transformTagName(cmpMeta.$tagName$) : cmpMeta.$tagName$;
+      const tagName = BUILD.transformTagName && options.transformTagName ? options.transformTagName(cmpMeta.$tagName$) : transformTag(cmpMeta.$tagName$);
       const HostElement = class extends HTMLElement {
         // StencilLazyHost
         constructor(self) {
@@ -4246,6 +4252,22 @@ function render(vnode, container) {
   renderVdom(ref, vnode);
 }
 
+// src/runtime/tag-transform.ts
+var tagTransformer = void 0;
+function transformTag(tag) {
+  if (!tagTransformer) return tag;
+  return tagTransformer(tag);
+}
+function setTagTransformer(transformer) {
+  if (tagTransformer) {
+    console.warn(`
+      A tagTransformer has already been set. 
+      Overwriting it may lead to error and unexpected results if your components have already been defined.
+    `);
+  }
+  tagTransformer = transformer;
+}
+
 // src/runtime/vdom/vdom-annotations.ts
 var insertVdomAnnotations = (doc, staticComponents) => {
   if (doc != null) {
@@ -4403,6 +4425,6 @@ exports.promiseResolve = promiseResolve;
 exports.registerInstance = registerInstance;
 exports.setNonce = setNonce;
 exports.win = win;
-//# sourceMappingURL=index-Bn1lGR-8.js.map
+//# sourceMappingURL=index-miHPKMQ3.js.map
 
-//# sourceMappingURL=index-Bn1lGR-8.js.map
+//# sourceMappingURL=index-miHPKMQ3.js.map

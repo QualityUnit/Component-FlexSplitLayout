@@ -4,7 +4,7 @@ const NAMESPACE = 'flex-resizer';
 const BUILD = /* flex-resizer */ { hydratedSelectorName: "hydrated", lazyLoad: true, prop: true, propChangeCallback: true, updatable: true};
 
 /*
- Stencil Client Platform v4.38.3 | MIT Licensed | https://stenciljs.com
+ Stencil Client Platform v4.39.0 | MIT Licensed | https://stenciljs.com
  */
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
@@ -375,6 +375,9 @@ var attachStyles = (hostRef) => {
 };
 var getScopeId = (cmp, mode) => "sc-" + (cmp.$tagName$);
 var h = (nodeName, vnodeData, ...children) => {
+  if (typeof nodeName === "string") {
+    nodeName = transformTag(nodeName);
+  }
   let child = null;
   let key = null;
   let simple = false;
@@ -1292,7 +1295,7 @@ var bootstrapLazy = (lazyBundles, options = {}) => {
         cmpMeta.$serializers$ = (_b = compactMeta[5]) != null ? _b : {};
         cmpMeta.$deserializers$ = (_c = compactMeta[6]) != null ? _c : {};
       }
-      const tagName = cmpMeta.$tagName$;
+      const tagName = transformTag(cmpMeta.$tagName$);
       const HostElement = class extends HTMLElement {
         // StencilLazyHost
         constructor(self) {
@@ -1410,6 +1413,9 @@ var hostListenerOpts = (flags) => supportsListenerOptions ? {
 
 // src/runtime/nonce.ts
 var setNonce = (nonce) => plt.$nonce$ = nonce;
+function transformTag(tag) {
+  return tag;
+}
 
 exports.bootstrapLazy = bootstrapLazy;
 exports.getElement = getElement;
@@ -1417,6 +1423,6 @@ exports.h = h;
 exports.promiseResolve = promiseResolve;
 exports.registerInstance = registerInstance;
 exports.setNonce = setNonce;
-//# sourceMappingURL=index-Bx_uMSti.js.map
+//# sourceMappingURL=index-DZje0i2M.js.map
 
-//# sourceMappingURL=index-Bx_uMSti.js.map
+//# sourceMappingURL=index-DZje0i2M.js.map

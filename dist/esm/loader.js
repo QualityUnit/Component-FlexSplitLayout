@@ -1,5 +1,5 @@
-import { g as globalScripts, b as bootstrapLazy } from './index-DZODx4ga.js';
-export { s as setNonce } from './index-DZODx4ga.js';
+import { g as globalScripts, b as bootstrapLazy } from './index-BYw9515x.js';
+export { s as setNonce } from './index-BYw9515x.js';
 
 const defineCustomElements = async (win, options) => {
   if (typeof window === 'undefined') return undefined;
@@ -8,4 +8,6 @@ const defineCustomElements = async (win, options) => {
 };
 
 export { defineCustomElements };
+//# sourceMappingURL=loader.js.map
+
 //# sourceMappingURL=loader.js.map

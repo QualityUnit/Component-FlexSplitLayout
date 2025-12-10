@@ -1,6 +1,6 @@
 'use strict';
 
-var index = require('./index-Bn1lGR-8.js');
+var index = require('./index-miHPKMQ3.js');
 
 const defineCustomElements = async (win, options) => {
   if (typeof window === 'undefined') return undefined;
@@ -10,4 +10,6 @@ const defineCustomElements = async (win, options) => {
 
 exports.setNonce = index.setNonce;
 exports.defineCustomElements = defineCustomElements;
+//# sourceMappingURL=loader.cjs.js.map
+
 //# sourceMappingURL=loader.cjs.js.map

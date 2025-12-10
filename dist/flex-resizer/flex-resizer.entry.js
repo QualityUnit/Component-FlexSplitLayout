@@ -1,6 +1,6 @@
-import { r as registerInstance, h, a as getElement } from './index-DZODx4ga.js';
+import { r as registerInstance, h, a as getElement } from './index-BYw9515x.js';
 
-const flexResizerCss = ".sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}";
+const flexResizerCss = () => `.sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}`;
 
 const FlexResizer = class {
     constructor(hostRef) {
@@ -192,7 +192,7 @@ const FlexResizer = class {
         "disabled": ["watchDisabled"]
     }; }
 };
-FlexResizer.style = flexResizerCss;
+FlexResizer.style = flexResizerCss();
 
 export { FlexResizer as flex_resizer };
 //# sourceMappingURL=flex-resizer.entry.esm.js.map

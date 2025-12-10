@@ -1,8 +1,8 @@
 'use strict';
 
-var index = require('./index-Bn1lGR-8.js');
+var index = require('./index-miHPKMQ3.js');
 
-const flexResizerCss = ".sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}";
+const flexResizerCss = () => `.sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}`;
 
 const FlexResizer = class {
     constructor(hostRef) {
@@ -194,7 +194,7 @@ const FlexResizer = class {
         "disabled": ["watchDisabled"]
     }; }
 };
-FlexResizer.style = flexResizerCss;
+FlexResizer.style = flexResizerCss();
 
 exports.flex_resizer = FlexResizer;
 //# sourceMappingURL=flex-resizer.entry.cjs.js.map
