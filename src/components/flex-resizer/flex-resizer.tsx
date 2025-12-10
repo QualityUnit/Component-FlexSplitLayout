@@ -1,4 +1,4 @@
-import {Component, Element, h, Listen, Prop, Watch} from '@stencil/core';
+import {Component, Element, h, Listen, Method, Prop, Watch} from '@stencil/core';
 
 @Component({
   tag: 'flex-resizer',
@@ -182,7 +182,15 @@ export class FlexResizer {
     return element;
   }
 
-  connectedCallback() {
+  /**
+   * Public method to refresh the component layout and restore saved sizes
+   */
+  @Method()
+  async refresh() {
+    this.initialize();
+  }
+
+  private initialize() {
     const element = this.normalizeDepth();
     if (getComputedStyle(element.parentElement)["flex-direction"] == "column" || getComputedStyle(element.parentElement)["flex-direction"] == "column-reverse") {
       this.el.classList.remove("row-resizer");
@@ -207,10 +215,14 @@ export class FlexResizer {
     this.b.style["flex-grow"] = localStorage.getItem(this.localStorageKey + "b");
   }
 
+  connectedCallback() {
+    this.initialize();
+  }
+
   @Watch("name")
   watchName(name: string) {
     this.localStorageKey = "flex-resizer-" + name
-    this.connectedCallback();
+    this.initialize();
   }
 
   @Watch("disabled")
@@ -220,9 +232,8 @@ export class FlexResizer {
       this.a.style["flex-grow"] = null;
       this.b.style["flex-grow"] = null;
     } else {
-      this.connectedCallback();
+      this.initialize();
     }
     element.style.display = disabled ? "none" : "block";
   }
-
 }
