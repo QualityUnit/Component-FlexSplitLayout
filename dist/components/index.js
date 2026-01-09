@@ -4,6 +4,3 @@ const globalScripts = () => {};
 const globalStyles = "";
 
 globalScripts();
-//# sourceMappingURL=index.js.map
-
-//# sourceMappingURL=index.js.map

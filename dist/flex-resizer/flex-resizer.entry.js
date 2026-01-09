@@ -1,4 +1,4 @@
-import { r as registerInstance, h, a as getElement } from './index-DI_Z65Jt.js';
+import { r as registerInstance, h, a as getElement } from './index-xF22QaSy.js';
 
 const flexResizerCss = () => `.sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}`;
 
@@ -197,11 +197,14 @@ const FlexResizer = class {
     }
     get el() { return getElement(this); }
     static get watchers() { return {
-        "name": ["watchName"],
-        "disabled": ["watchDisabled"]
+        "name": [{
+                "watchName": 0
+            }],
+        "disabled": [{
+                "watchDisabled": 0
+            }]
     }; }
 };
 FlexResizer.style = flexResizerCss();
 
 export { FlexResizer as flex_resizer };
-//# sourceMappingURL=flex-resizer.entry.esm.js.map

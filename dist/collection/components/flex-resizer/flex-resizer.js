@@ -354,4 +354,3 @@ export class FlexResizer {
             }];
     }
 }
-//# sourceMappingURL=flex-resizer.js.map

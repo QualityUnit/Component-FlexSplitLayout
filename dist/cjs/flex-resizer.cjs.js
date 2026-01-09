@@ -1,10 +1,10 @@
 'use strict';
 
-var index = require('./index-DC4iJU7_.js');
+var index = require('./index-BPjEuDoF.js');
 
 var _documentCurrentScript = typeof document !== 'undefined' ? document.currentScript : null;
 /*
- Stencil Client Patch Browser v4.39.0 | MIT Licensed | https://stenciljs.com
+ Stencil Client Patch Browser v4.41.1 | MIT Licensed | https://stenciljs.com
  */
 
 var patchBrowser = () => {
@@ -45,10 +45,7 @@ var patchCloneNodeFix = (HTMLElementPrototype) => {
 
 patchBrowser().then(async (options) => {
   await index.globalScripts();
-  return index.bootstrapLazy([["flex-resizer.cjs",[[258,"flex-resizer",{"depth":[2],"overrideIframe":[4,"override-iframe"],"name":[1],"save":[4],"disabled":[4],"refresh":[64]},[[0,"mousedown","resizeStart"],[1,"touchstart","resizeStart"]],{"name":["watchName"],"disabled":["watchDisabled"]}]]]], options);
+  return index.bootstrapLazy([["flex-resizer.cjs",[[2,"flex-resizer",{"depth":[2],"overrideIframe":[4,"override-iframe"],"name":[1],"save":[4],"disabled":[4],"refresh":[64]},[[0,"mousedown","resizeStart"],[1,"touchstart","resizeStart"]],{"name":[{"watchName":0}],"disabled":[{"watchDisabled":0}]}]]]], options);
 });
 
 exports.setNonce = index.setNonce;
-//# sourceMappingURL=flex-resizer.cjs.js.map
-
-//# sourceMappingURL=flex-resizer.cjs.js.map

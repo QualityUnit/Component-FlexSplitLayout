@@ -1,6 +1,6 @@
 'use strict';
 
-var index = require('./index-DC4iJU7_.js');
+var index = require('./index-BPjEuDoF.js');
 
 const flexResizerCss = () => `.sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}`;
 
@@ -199,11 +199,14 @@ const FlexResizer = class {
     }
     get el() { return index.getElement(this); }
     static get watchers() { return {
-        "name": ["watchName"],
-        "disabled": ["watchDisabled"]
+        "name": [{
+                "watchName": 0
+            }],
+        "disabled": [{
+                "watchDisabled": 0
+            }]
     }; }
 };
 FlexResizer.style = flexResizerCss();
 
 exports.flex_resizer = FlexResizer;
-//# sourceMappingURL=flex-resizer.entry.cjs.js.map

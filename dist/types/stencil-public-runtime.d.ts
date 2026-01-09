@@ -63,6 +63,12 @@ export interface ShadowRootOptions {
      * focusable part is given focus, and the shadow host is given any available `:focus` styling.
      */
     delegatesFocus?: boolean;
+    /**
+     * Sets the slot assignment mode for the shadow root. When set to `'manual'`, enables imperative
+     * slotting using the `HTMLSlotElement.assign()` method. Defaults to `'named'` for standard
+     * declarative slotting behavior.
+     */
+    slotAssignment?: 'manual' | 'named';
 }
 export interface ModeStyles {
     [modeName: string]: string | string[];
@@ -156,7 +162,9 @@ export interface StateDecorator {
     (): PropertyDecorator;
 }
 export interface WatchDecorator {
-    (propName: any): CustomMethodDecorator<(newValue?: any, oldValue?: any, propName?: any, ...args: any[]) => any | void>;
+    (propName: any, watchOptions?: {
+        immediate?: boolean;
+    }): CustomMethodDecorator<(newValue?: any, oldValue?: any, propName?: any, ...args: any[]) => any | void>;
 }
 export interface PropSerializeDecorator {
     (propName: any): CustomMethodDecorator<(newValue?: any, propName?: string, ...args: any[]) => string | null>;
@@ -610,7 +618,7 @@ export interface FunctionalUtilities {
     map: (children: VNode[], cb: (vnode: ChildNode, index: number, array: ChildNode[]) => ChildNode) => VNode[];
 }
 export interface FunctionalComponent<T = {}> {
-    (props: T, children: VNode[], utils: FunctionalUtilities): VNode | VNode[];
+    (props: T, children: VNode[], utils: FunctionalUtilities): VNode | VNode[] | null;
 }
 /**
  * A Child VDOM node
@@ -665,6 +673,35 @@ export declare function h(sel: any, text: string): VNode;
 export declare function h(sel: any, children: Array<VNode | undefined | null>): VNode;
 export declare function h(sel: any, data: VNodeData | null, text: string): VNode;
 export declare function h(sel: any, data: VNodeData | null, children: Array<VNode | undefined | null>): VNode;
+/**
+ * Automatic JSX runtime functions for TypeScript's react-jsx mode.
+ * These functions are called automatically by TypeScript when using "jsx": "react-jsx".
+ * @param type type of node
+ * @param props properties of node
+ * @param key optional key for the node
+ * @returns a jsx vnode
+ */
+export declare function jsx(type: any, props: any, key?: string): VNode;
+/**
+ * Automatic JSX runtime functions for TypeScript's react-jsxmode with multiple children.
+ * @param type type of node
+ * @param props properties of node
+ * @param key optional key for the node
+ * @returns a jsx vnode
+ */
+export declare function jsxs(type: any, props: any, key?: string): VNode;
+/**
+ * Automatic JSX runtime functions for TypeScript's react-jsxdev mode.
+ * These functions are called automatically by TypeScript when using "jsx": "react-jsxdev".
+ * @param type type of node
+ * @param props properties of node
+ * @param key optional key for the node
+ * @param isStaticChildren indicates if the children are static
+ * @param source source information
+ * @param self reference to the component instance
+ * @returns a jsx vnode
+ */
+export declare function jsxDEV(type: any, props: any, key?: string | number, isStaticChildren?: boolean, source?: any, self?: any): VNode;
 export declare function h(sel: any, data: VNodeData | null, children: VNode): VNode;
 /**
  * A virtual DOM node
@@ -695,7 +732,7 @@ declare namespace LocalJSX {
 export { LocalJSX as JSX };
 export declare namespace JSXBase {
     interface IntrinsicElements {
-        slot: JSXBase.SlotAttributes;
+        slot: JSXBase.SlotAttributes<HTMLSlotElement>;
         a: JSXBase.AnchorHTMLAttributes<HTMLAnchorElement>;
         abbr: JSXBase.HTMLAttributes;
         address: JSXBase.HTMLAttributes;
@@ -865,7 +902,7 @@ export declare namespace JSXBase {
         use: JSXBase.SVGAttributes;
         view: JSXBase.SVGAttributes;
     }
-    interface SlotAttributes extends JSXAttributes {
+    interface SlotAttributes<T = HTMLSlotElement> extends JSXAttributes<T> {
         name?: string;
         slot?: string;
         onSlotchange?: (event: Event) => void;
@@ -921,6 +958,9 @@ export declare namespace JSXBase {
         popoverTargetAction?: string;
         popoverTargetElement?: Element | null;
         popoverTarget?: string;
+        command?: string;
+        commandFor?: string;
+        commandfor?: string;
     }
     interface CanvasHTMLAttributes<T> extends HTMLAttributes<T> {
         height?: number | string;

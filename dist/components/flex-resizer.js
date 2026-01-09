@@ -200,11 +200,15 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class FlexResizer extends
     }
     get el() { return this; }
     static get watchers() { return {
-        "name": ["watchName"],
-        "disabled": ["watchDisabled"]
+        "name": [{
+                "watchName": 0
+            }],
+        "disabled": [{
+                "watchDisabled": 0
+            }]
     }; }
     static get style() { return flexResizerCss(); }
-}, [258, "flex-resizer", {
+}, [2, "flex-resizer", {
         "depth": [2],
         "overrideIframe": [4, "override-iframe"],
         "name": [1],
@@ -212,8 +216,12 @@ const FlexResizer$1 = /*@__PURE__*/ proxyCustomElement(class FlexResizer extends
         "disabled": [4],
         "refresh": [64]
     }, [[0, "mousedown", "resizeStart"], [1, "touchstart", "resizeStart"]], {
-        "name": ["watchName"],
-        "disabled": ["watchDisabled"]
+        "name": [{
+                "watchName": 0
+            }],
+        "disabled": [{
+                "watchDisabled": 0
+            }]
     }]);
 function defineCustomElement$1() {
     if (typeof customElements === "undefined") {
@@ -233,6 +241,3 @@ const FlexResizer = FlexResizer$1;
 const defineCustomElement = defineCustomElement$1;
 
 export { FlexResizer, defineCustomElement };
-//# sourceMappingURL=flex-resizer.js.map
-
-//# sourceMappingURL=flex-resizer.js.map
