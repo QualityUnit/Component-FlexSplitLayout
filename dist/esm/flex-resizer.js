@@ -1,8 +1,8 @@
-import { B as BUILD, c as consoleDevInfo, H, w as win, N as NAMESPACE, p as promiseResolve, g as globalScripts, b as bootstrapLazy } from './index-xF22QaSy.js';
-export { s as setNonce } from './index-xF22QaSy.js';
+import { B as BUILD, c as consoleDevInfo, H, w as win, N as NAMESPACE, p as promiseResolve, g as globalScripts, b as bootstrapLazy } from './index-Cy5kAYI5.js';
+export { s as setNonce } from './index-Cy5kAYI5.js';
 
 /*
- Stencil Client Patch Browser v4.41.1 | MIT Licensed | https://stenciljs.com
+ Stencil Client Patch Browser v4.41.2 | MIT Licensed | https://stenciljs.com
  */
 
 var patchBrowser = () => {

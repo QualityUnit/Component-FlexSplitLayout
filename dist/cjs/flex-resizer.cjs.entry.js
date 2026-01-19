@@ -1,6 +1,6 @@
 'use strict';
 
-var index = require('./index-BPjEuDoF.js');
+var index = require('./index-DkgEQH6a.js');
 
 const flexResizerCss = () => `.sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}`;
 
