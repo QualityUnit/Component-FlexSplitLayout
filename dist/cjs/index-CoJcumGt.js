@@ -1,8 +1,10 @@
+'use strict';
+
 const NAMESPACE = 'flex-resizer';
 const BUILD = /* flex-resizer */ { hotModuleReplacement: false, hydratedSelectorName: "hydrated", lazyLoad: true, prop: true, propChangeCallback: true, updatable: true};
 
 /*
- Stencil Client Platform v4.41.2 | MIT Licensed | https://stenciljs.com
+ Stencil Client Platform v4.41.3 | MIT Licensed | https://stenciljs.com
  */
 
 var reWireGetterSetter = (instance, hostRef) => {
@@ -1374,4 +1376,9 @@ function transformTag(tag) {
   return tag;
 }
 
-export { bootstrapLazy as b, getElement as g, h, promiseResolve as p, registerInstance as r, setNonce as s };
+exports.bootstrapLazy = bootstrapLazy;
+exports.getElement = getElement;
+exports.h = h;
+exports.promiseResolve = promiseResolve;
+exports.registerInstance = registerInstance;
+exports.setNonce = setNonce;

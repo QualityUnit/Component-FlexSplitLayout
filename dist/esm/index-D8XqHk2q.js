@@ -6,7 +6,7 @@ const globalScripts = () => {};
 const globalStyles = "";
 
 /*
- Stencil Client Platform v4.41.2 | MIT Licensed | https://stenciljs.com
+ Stencil Client Platform v4.41.3 | MIT Licensed | https://stenciljs.com
  */
 
 var Build = {
@@ -2312,7 +2312,7 @@ var setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags, initialRen
   } else if (BUILD.vdomKey && memberName === "key") {
   } else if (BUILD.vdomRef && memberName === "ref") {
     if (newValue) {
-      newValue(elm);
+      queueRefAttachment(newValue, elm);
     }
   } else if (BUILD.vdomListener && (BUILD.lazyLoad ? !isProp : !elm.__lookupSetter__(memberName)) && memberName[0] === "o" && memberName[1] === "n") {
     if (memberName[2] === "-") {
@@ -2441,6 +2441,8 @@ var useNativeShadowDom = false;
 var checkSlotFallbackVisibility = false;
 var checkSlotRelocate = false;
 var isSvgMode = false;
+var refCallbacksToRemove = [];
+var refCallbacksToAttach = [];
 var createElm = (oldParentVNode, newParentVNode, childIndex) => {
   var _a;
   const newVNode2 = newParentVNode.$children$[childIndex];
@@ -2827,8 +2829,23 @@ var markSlotContentForRelocation = (elm) => {
 };
 var nullifyVNodeRefs = (vNode) => {
   if (BUILD.vdomRef) {
-    vNode.$attrs$ && vNode.$attrs$.ref && vNode.$attrs$.ref(null);
+    if (vNode.$attrs$ && vNode.$attrs$.ref) {
+      refCallbacksToRemove.push(() => vNode.$attrs$.ref(null));
+    }
     vNode.$children$ && vNode.$children$.map(nullifyVNodeRefs);
+  }
+};
+var queueRefAttachment = (refCallback, elm) => {
+  if (BUILD.vdomRef) {
+    refCallbacksToAttach.push(() => refCallback(elm));
+  }
+};
+var flushQueuedRefCallbacks = () => {
+  if (BUILD.vdomRef) {
+    refCallbacksToRemove.forEach((cb) => cb());
+    refCallbacksToRemove.length = 0;
+    refCallbacksToAttach.forEach((cb) => cb());
+    refCallbacksToAttach.length = 0;
   }
 };
 var insertBefore = (parent, newNode, reference, isInitialLoad) => {
@@ -3019,6 +3036,7 @@ render() {
     }
   }
   contentRef = void 0;
+  flushQueuedRefCallbacks();
 };
 var slotReferenceDebugNode = (slotVNode) => {
   var _a;
@@ -3353,13 +3371,22 @@ var setValue = (ref, propName, newVal, cmpMeta) => {
   if ((!BUILD.lazyLoad || !(flags & 8 /* isConstructingInstance */) || oldVal === void 0) && didValueChange) {
     hostRef.$instanceValues$.set(propName, newVal);
     if (BUILD.serializer && BUILD.reflect && cmpMeta.$attrsToReflect$) {
-      if (instance && cmpMeta.$serializers$ && cmpMeta.$serializers$[propName]) {
-        let attrVal = newVal;
-        for (const serializer of cmpMeta.$serializers$[propName]) {
-          const [[methodName]] = Object.entries(serializer);
-          attrVal = instance[methodName](attrVal, propName);
+      if (cmpMeta.$serializers$ && cmpMeta.$serializers$[propName]) {
+        const runSerializer = (inst) => {
+          let attrVal = newVal;
+          for (const serializer of cmpMeta.$serializers$[propName]) {
+            const [[methodName]] = Object.entries(serializer);
+            attrVal = inst[methodName](attrVal, propName);
+          }
+          hostRef.$serializerValues$.set(propName, attrVal);
+        };
+        if (instance) {
+          runSerializer(instance);
+        } else {
+          hostRef.$fetchedCbList$.push(() => {
+            runSerializer(hostRef.$lazyInstance$);
+          });
         }
-        hostRef.$serializerValues$.set(propName, attrVal);
       }
     }
     if (BUILD.isDev) {

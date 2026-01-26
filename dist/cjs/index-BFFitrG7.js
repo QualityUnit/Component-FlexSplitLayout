@@ -1,3 +1,5 @@
+'use strict';
+
 const NAMESPACE = 'flex-resizer';
 const BUILD = /* flex-resizer */ { allRenderFn: true, appendChildSlotFix: false, asyncLoading: true, asyncQueue: false, attachStyles: true, cloneNodeFix: false, constructableCSS: true, cssAnnotations: true, deserializer: false, devTools: false, element: false, event: false, experimentalScopedSlotChanges: false, experimentalSlotFixes: false, formAssociated: false, hasRenderFn: true, hostListener: true, hostListenerTarget: false, hostListenerTargetBody: false, hostListenerTargetDocument: false, hostListenerTargetParent: false, hostListenerTargetWindow: false, hotModuleReplacement: false, hydrateClientSide: false, hydrateServerSide: false, hydratedAttribute: false, hydratedClass: true, hydratedSelectorName: "hydrated", initializeNextTick: false, invisiblePrehydration: true, isDebug: false, isDev: true, isTesting: true, lazyLoad: true, lifecycle: false, lifecycleDOMEvents: true, member: true, method: true, mode: false, observeAttribute: true, profile: false, prop: true, propBoolean: true, propChangeCallback: true, propMutable: false, propNumber: true, propString: true, reflect: false, scoped: true, scopedSlotTextContentFix: false, scriptDataOpts: false, serializer: false, shadowDelegatesFocus: false, shadowDom: false, shadowSlotAssignmentManual: false, slot: false, slotChildNodesFix: false, slotRelocation: false, state: false, style: true, svg: false, taskQueue: true, transformTagName: false, updatable: true, vdomAttribute: true, vdomClass: false, vdomFunctional: false, vdomKey: true, vdomListener: false, vdomPropOrAttr: false, vdomRef: false, vdomRender: true, vdomStyle: false, vdomText: false, vdomXlink: false };
 const Env = /* flex-resizer */ {};
@@ -6,7 +8,7 @@ const globalScripts = () => {};
 const globalStyles = "";
 
 /*
- Stencil Client Platform v4.41.2 | MIT Licensed | https://stenciljs.com
+ Stencil Client Platform v4.41.3 | MIT Licensed | https://stenciljs.com
  */
 
 var Build = {
@@ -2312,7 +2314,7 @@ var setAccessor = (elm, memberName, oldValue, newValue, isSvg, flags, initialRen
   } else if (BUILD.vdomKey && memberName === "key") {
   } else if (BUILD.vdomRef && memberName === "ref") {
     if (newValue) {
-      newValue(elm);
+      queueRefAttachment(newValue, elm);
     }
   } else if (BUILD.vdomListener && (BUILD.lazyLoad ? !isProp : !elm.__lookupSetter__(memberName)) && memberName[0] === "o" && memberName[1] === "n") {
     if (memberName[2] === "-") {
@@ -2441,6 +2443,8 @@ var useNativeShadowDom = false;
 var checkSlotFallbackVisibility = false;
 var checkSlotRelocate = false;
 var isSvgMode = false;
+var refCallbacksToRemove = [];
+var refCallbacksToAttach = [];
 var createElm = (oldParentVNode, newParentVNode, childIndex) => {
   var _a;
   const newVNode2 = newParentVNode.$children$[childIndex];
@@ -2827,8 +2831,23 @@ var markSlotContentForRelocation = (elm) => {
 };
 var nullifyVNodeRefs = (vNode) => {
   if (BUILD.vdomRef) {
-    vNode.$attrs$ && vNode.$attrs$.ref && vNode.$attrs$.ref(null);
+    if (vNode.$attrs$ && vNode.$attrs$.ref) {
+      refCallbacksToRemove.push(() => vNode.$attrs$.ref(null));
+    }
     vNode.$children$ && vNode.$children$.map(nullifyVNodeRefs);
+  }
+};
+var queueRefAttachment = (refCallback, elm) => {
+  if (BUILD.vdomRef) {
+    refCallbacksToAttach.push(() => refCallback(elm));
+  }
+};
+var flushQueuedRefCallbacks = () => {
+  if (BUILD.vdomRef) {
+    refCallbacksToRemove.forEach((cb) => cb());
+    refCallbacksToRemove.length = 0;
+    refCallbacksToAttach.forEach((cb) => cb());
+    refCallbacksToAttach.length = 0;
   }
 };
 var insertBefore = (parent, newNode, reference, isInitialLoad) => {
@@ -3019,6 +3038,7 @@ render() {
     }
   }
   contentRef = void 0;
+  flushQueuedRefCallbacks();
 };
 var slotReferenceDebugNode = (slotVNode) => {
   var _a;
@@ -3353,13 +3373,22 @@ var setValue = (ref, propName, newVal, cmpMeta) => {
   if ((!BUILD.lazyLoad || !(flags & 8 /* isConstructingInstance */) || oldVal === void 0) && didValueChange) {
     hostRef.$instanceValues$.set(propName, newVal);
     if (BUILD.serializer && BUILD.reflect && cmpMeta.$attrsToReflect$) {
-      if (instance && cmpMeta.$serializers$ && cmpMeta.$serializers$[propName]) {
-        let attrVal = newVal;
-        for (const serializer of cmpMeta.$serializers$[propName]) {
-          const [[methodName]] = Object.entries(serializer);
-          attrVal = instance[methodName](attrVal, propName);
+      if (cmpMeta.$serializers$ && cmpMeta.$serializers$[propName]) {
+        const runSerializer = (inst) => {
+          let attrVal = newVal;
+          for (const serializer of cmpMeta.$serializers$[propName]) {
+            const [[methodName]] = Object.entries(serializer);
+            attrVal = inst[methodName](attrVal, propName);
+          }
+          hostRef.$serializerValues$.set(propName, attrVal);
+        };
+        if (instance) {
+          runSerializer(instance);
+        } else {
+          hostRef.$fetchedCbList$.push(() => {
+            runSerializer(hostRef.$lazyInstance$);
+          });
         }
-        hostRef.$serializerValues$.set(propName, attrVal);
       }
     }
     if (BUILD.isDev) {
@@ -4485,4 +4514,15 @@ var insertChildVNodeAnnotations = (doc, vnodeChild, cmpData, hostId, depth, inde
   }
 };
 
-export { BUILD as B, H, NAMESPACE as N, getElement as a, bootstrapLazy as b, consoleDevInfo as c, globalScripts as g, h, promiseResolve as p, registerInstance as r, setNonce as s, win as w };
+exports.BUILD = BUILD;
+exports.H = H;
+exports.NAMESPACE = NAMESPACE;
+exports.bootstrapLazy = bootstrapLazy;
+exports.consoleDevInfo = consoleDevInfo;
+exports.getElement = getElement;
+exports.globalScripts = globalScripts;
+exports.h = h;
+exports.promiseResolve = promiseResolve;
+exports.registerInstance = registerInstance;
+exports.setNonce = setNonce;
+exports.win = win;

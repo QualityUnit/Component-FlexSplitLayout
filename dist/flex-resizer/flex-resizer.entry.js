@@ -1,4 +1,4 @@
-import { r as registerInstance, h, a as getElement } from './index-Cy5kAYI5.js';
+import { r as registerInstance, h, a as getElement } from './index-D8XqHk2q.js';
 
 const flexResizerCss = () => `.sc-flex-resizer-h{display:block}div.sc-flex-resizer{height:100%;width:100%}.column-resizer.sc-flex-resizer{cursor:row-resize}.row-resizer.sc-flex-resizer{cursor:col-resize}`;
 
